@@ -1,0 +1,2370 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>웹 접근성 실무 역량 평가 퀴즈</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
+<style>
+/* ===========================
+   Design Tokens
+   =========================== */
+:root {
+  --ink-900: #0a0b0e;
+  --ink-800: #111318;
+  --ink-700: #1a1d24;
+  --ink-600: #22262f;
+  --ink-500: #2e333f;
+  --ink-400: #3d4452;
+  --ink-300: #6b7384;
+  --ink-200: #9aa0b0;
+  --ink-100: #c8cdd8;
+  --ink-50:  #eceef2;
+  --ink-0:   #f8f9fb;
+
+  --blue-vivid: #3b82f6;
+  --blue-soft:  #60a5fa;
+  --blue-glow:  rgba(59,130,246,0.18);
+  --blue-tint:  rgba(59,130,246,0.08);
+
+  --green-vivid: #22c55e;
+  --green-soft:  #4ade80;
+  --green-tint:  rgba(34,197,94,0.10);
+  --green-border: rgba(34,197,94,0.35);
+
+  --red-vivid:  #ef4444;
+  --red-soft:   #f87171;
+  --red-tint:   rgba(239,68,68,0.10);
+  --red-border: rgba(239,68,68,0.35);
+
+  --amber-vivid: #f59e0b;
+  --purple-vivid: #8b5cf6;
+
+  --bg:          var(--ink-900);
+  --surface:     var(--ink-800);
+  --surface-alt: var(--ink-700);
+  --border:      var(--ink-600);
+  --text:        var(--ink-0);
+  --text-muted:  var(--ink-300);
+  --text-sub:    var(--ink-200);
+  --text-feedback: #e8eaf0;
+  --text-label: #9aa0b0;
+
+  --radius-xs: 8px;
+  --radius-sm: 12px;
+  --radius-md: 18px;
+  --radius-lg: 24px;
+  --radius-xl: 32px;
+
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.3), 0 1px 2px rgba(0,0,0,0.2);
+  --shadow-md: 0 4px 16px rgba(0,0,0,0.4), 0 2px 6px rgba(0,0,0,0.3);
+  --shadow-lg: 0 12px 40px rgba(0,0,0,0.5), 0 4px 12px rgba(0,0,0,0.3);
+  --shadow-glow: 0 0 0 1px var(--blue-vivid), 0 0 20px var(--blue-glow);
+
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-fast:   cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --dur: 0.22s;
+}
+
+[data-theme="light"] {
+  --bg:          #f4f6f9;
+  --surface:     #ffffff;
+  --surface-alt: #f0f2f6;
+  --border:      #dde1ea;
+  --text:        #111318;
+  --text-muted:  #6b7384;
+  --text-sub:    #3d4452;
+  --text-feedback: #111318;
+  --text-label: #6b7384;
+  --blue-glow:   rgba(59,130,246,0.12);
+  --shadow-sm:   0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.05);
+  --shadow-md:   0 4px 16px rgba(0,0,0,0.10), 0 2px 6px rgba(0,0,0,0.06);
+  --shadow-lg:   0 12px 40px rgba(0,0,0,0.12), 0 4px 12px rgba(0,0,0,0.08);
+}
+
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    --bg: #f4f6f9; --surface: #ffffff; --surface-alt: #f0f2f6;
+    --border: #dde1ea; --text: #111318; --text-muted: #6b7384;
+    --text-sub: #3d4452; --text-feedback: #111318; --text-label: #6b7384;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.05);
+    --shadow-md: 0 4px 16px rgba(0,0,0,0.10), 0 2px 6px rgba(0,0,0,0.06);
+    --shadow-lg: 0 12px 40px rgba(0,0,0,0.12), 0 4px 12px rgba(0,0,0,0.08);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
+
+/* ===========================
+   Reset & Base
+   =========================== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; overflow: hidden; }
+
+body {
+  font-family: 'DM Sans', -apple-system, 'Pretendard', 'Noto Sans KR', sans-serif;
+  font-size: 16px;
+  background: var(--bg);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+  transition: background var(--dur) var(--ease-smooth), color var(--dur) var(--ease-smooth);
+}
+
+a { color: var(--blue-soft); text-decoration: none; }
+button { cursor: pointer; font-family: inherit; }
+
+:focus-visible {
+  outline: 2px solid var(--blue-vivid);
+  outline-offset: 3px;
+  border-radius: var(--radius-xs);
+}
+
+/* ===========================
+   Toolbar
+   =========================== */
+#toolbar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+  height: 56px;
+  background: color-mix(in srgb, var(--surface) 80%, transparent);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 8px; padding: 0 20px;
+}
+
+.toolbar-title {
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--text);
+  margin-right: auto;
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+}
+
+.toolbar-pill {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: var(--surface-alt);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 6px 14px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-sub);
+  transition: all var(--dur) var(--ease-smooth);
+  cursor: pointer;
+  white-space: nowrap;
+}
+.toolbar-pill:hover { background: var(--border); color: var(--text); }
+.toolbar-pill.active { background: var(--blue-vivid); border-color: var(--blue-vivid); color: #fff; }
+.toolbar-pill svg { width: 14px; height: 14px; flex-shrink: 0; }
+
+/* ===========================
+   Screens
+   =========================== */
+.screen {
+  display: none; position: fixed;
+  top: 56px; left: 0; right: 0; bottom: 0;
+  overflow-y: auto; overflow-x: hidden;
+  background: var(--bg);
+  padding: 32px 20px 80px;
+}
+.screen.active { display: block; animation: screenIn 0.35s var(--ease-smooth) forwards; }
+
+@keyframes screenIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.content-wrap { max-width: 680px; margin: 0 auto; }
+
+/* ===========================
+   Login Screen
+   =========================== */
+#screen-login.active {
+  display: flex; align-items: center; justify-content: center;
+  padding: 24px 16px;
+}
+
+.login-shell {
+  width: 100%; max-width: 480px;
+}
+
+.login-hero {
+  text-align: center; margin-bottom: 32px;
+}
+
+.login-eyebrow {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 0.78rem; font-weight: 700; letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--blue-soft);
+  background: var(--blue-tint);
+  border: 1px solid rgba(59,130,246,0.2);
+  border-radius: 999px;
+  padding: 5px 14px;
+  margin-bottom: 20px;
+}
+
+.login-h1 {
+  font-size: clamp(2.2rem, 5vw, 3.2rem);
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.04em;
+  color: var(--text);
+  margin-bottom: 12px;
+}
+
+.login-h1 em {
+  font-style: normal;
+  color: var(--blue-soft);
+  position: relative;
+}
+
+.login-sub {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  font-weight: 400;
+  line-height: 1.6;
+}
+
+.login-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 32px;
+  box-shadow: var(--shadow-md);
+}
+
+.meta-chips {
+  display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 28px;
+}
+
+.meta-chip {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-size: 0.82rem; font-weight: 600;
+  color: var(--text-muted);
+  background: var(--surface-alt);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 5px 12px;
+}
+
+.field-label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 10px;
+}
+
+.field-input {
+  width: 100%;
+  padding: 14px 18px;
+  background: var(--surface-alt);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 1rem;
+  font-family: inherit;
+  color: var(--text);
+  transition: all var(--dur) var(--ease-smooth);
+  margin-bottom: 20px;
+}
+
+.field-input:focus {
+  outline: none;
+  border-color: var(--blue-vivid);
+  background: var(--surface);
+  box-shadow: 0 0 0 3px var(--blue-glow);
+}
+
+.btn-start {
+  width: 100%;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  background: var(--blue-vivid);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: 15px 24px;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  transition: all 0.18s var(--ease-smooth);
+  box-shadow: 0 4px 14px rgba(59,130,246,0.35);
+}
+.btn-start:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(59,130,246,0.4); }
+.btn-start:active { transform: translateY(0); }
+.btn-start svg { width: 18px; height: 18px; }
+
+/* ===========================
+   Progress
+   =========================== */
+.progress-wrap {
+  margin-bottom: 20px;
+}
+
+.progress-meta {
+  display: flex; justify-content: space-between; align-items: baseline;
+  margin-bottom: 8px;
+}
+
+.progress-label {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  letter-spacing: 0.02em;
+}
+
+.progress-score {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--blue-soft);
+}
+
+.progress-track {
+  width: 100%;
+  height: 4px;
+  background: var(--border);
+  border-radius: 99px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--blue-vivid), var(--blue-soft));
+  border-radius: 99px;
+  transition: width 0.5s var(--ease-smooth);
+}
+
+/* ===========================
+   Question Card
+   =========================== */
+.q-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 32px;
+  box-shadow: var(--shadow-md);
+  animation: screenIn 0.3s var(--ease-smooth);
+}
+
+.q-meta {
+  display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.badge {
+  display: inline-flex; align-items: center;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.badge-beginner {
+  background: rgba(59,130,246,0.12);
+  color: var(--blue-soft);
+  border: 1px solid rgba(59,130,246,0.2);
+}
+.badge-mid {
+  background: rgba(139,92,246,0.12);
+  color: #a78bfa;
+  border: 1px solid rgba(139,92,246,0.2);
+}
+.badge-adv {
+  background: rgba(245,158,11,0.12);
+  color: var(--amber-vivid);
+  border: 1px solid rgba(245,158,11,0.2);
+}
+
+.q-category {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.q-num {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  margin-left: auto;
+  font-variant-numeric: tabular-nums;
+}
+
+.q-text {
+  font-size: 1.15rem;
+  font-weight: 600;
+  line-height: 1.65;
+  color: var(--text);
+  margin-bottom: 24px;
+  letter-spacing: -0.01em;
+  white-space: pre-line;
+}
+
+/* Options */
+.options-group {
+  border: none; padding: 0;
+  display: flex; flex-direction: column; gap: 8px;
+}
+
+.opt-legend {
+  position: absolute; width: 1px; height: 1px; overflow: hidden;
+  clip: rect(1px,1px,1px,1px); clip-path: inset(100%);
+}
+
+.opt-label {
+  display: flex; align-items: flex-start; gap: 14px;
+  padding: 16px 18px;
+  border-radius: var(--radius-sm);
+  border: 1.5px solid var(--border);
+  background: var(--surface-alt);
+  cursor: pointer;
+  transition: all 0.16s var(--ease-smooth);
+  color: var(--text);
+  font-size: 0.97rem;
+  font-weight: 500;
+  line-height: 1.55;
+  position: relative;
+  user-select: none;
+}
+
+.opt-label:hover {
+  border-color: var(--blue-vivid);
+  background: var(--blue-tint);
+  transform: translateX(2px);
+}
+
+.opt-radio {
+  margin-top: 2px;
+  flex-shrink: 0;
+  width: 18px; height: 18px;
+  accent-color: var(--blue-vivid);
+}
+
+.opt-num {
+  flex-shrink: 0;
+  font-weight: 800;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  min-width: 20px;
+  margin-top: 1px;
+  font-variant-numeric: tabular-nums;
+}
+
+.opt-text { flex: 1; }
+
+.opt-icon {
+  font-size: 1rem;
+  margin-left: auto;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.opt-label.opt-correct {
+  border-color: var(--green-border);
+  background: var(--green-tint);
+}
+
+.opt-label.opt-wrong {
+  border-color: var(--red-border);
+  background: var(--red-tint);
+}
+
+/* Feedback */
+.feedback-wrap {
+  margin-top: 24px;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  animation: screenIn 0.3s var(--ease-smooth);
+}
+
+.feedback-banner {
+  display: flex; align-items: center; gap: 10px;
+  padding: 14px 20px;
+  font-weight: 700;
+  font-size: 0.97rem;
+}
+
+.feedback-banner.correct { background: var(--green-tint); color: var(--green-vivid); border: 1px solid var(--green-border); border-radius: var(--radius-md) var(--radius-md) 0 0; border-bottom: none; }
+.feedback-banner.wrong   { background: var(--red-tint);   color: var(--red-soft);    border: 1px solid var(--red-border);   border-radius: var(--radius-md) var(--radius-md) 0 0; border-bottom: none; }
+
+.feedback-body {
+  padding: 20px;
+  background: var(--surface-alt);
+  border: 1px solid var(--border);
+  border-top: none;
+  border-radius: 0 0 var(--radius-md) var(--radius-md);
+  display: flex; flex-direction: column; gap: 16px;
+}
+
+.fb-section-label {
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-label);
+  margin-bottom: 6px;
+}
+
+.fb-text {
+  font-size: 0.93rem;
+  line-height: 1.65;
+  color: var(--text-feedback);
+}
+
+.fb-wrong-item {
+  font-size: 0.88rem;
+  line-height: 1.55;
+  color: var(--text-feedback);
+  padding: 6px 0;
+  border-bottom: 1px solid var(--border);
+}
+.fb-wrong-item:last-child { border-bottom: none; }
+
+.fb-tip {
+  display: flex; gap: 10px; align-items: flex-start;
+  background: var(--blue-tint);
+  border: 1px solid rgba(59,130,246,0.2);
+  border-radius: var(--radius-sm);
+  padding: 14px 16px;
+  font-size: 0.88rem;
+  line-height: 1.6;
+  color: var(--text-feedback);
+}
+
+.fb-tip-icon { font-size: 1rem; flex-shrink: 0; margin-top: 1px; }
+
+/* Countdown */
+.countdown-bar {
+  display: flex; align-items: center; gap: 10px;
+  margin-top: 16px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--blue-soft);
+}
+
+.countdown-ring {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  background: var(--blue-vivid);
+  color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 800;
+  font-size: 0.82rem;
+  flex-shrink: 0;
+}
+
+/* Nav Buttons */
+.nav-row {
+  display: flex; gap: 10px; margin-top: 24px;
+}
+
+.btn-nav {
+  flex: 1;
+  padding: 13px 18px;
+  border-radius: var(--radius-sm);
+  border: 1.5px solid var(--border);
+  background: var(--surface-alt);
+  color: var(--text);
+  font-size: 0.93rem;
+  font-weight: 700;
+  transition: all 0.16s var(--ease-smooth);
+}
+.btn-nav:hover:not(:disabled) { background: var(--border); }
+.btn-nav:disabled { opacity: 0.3; cursor: not-allowed; }
+
+.btn-nav-primary {
+  background: var(--text);
+  color: var(--bg);
+  border-color: var(--text);
+}
+.btn-nav-primary:hover:not(:disabled) { opacity: 0.88; transform: translateY(-1px); }
+
+/* ===========================
+   Result Screen
+   =========================== */
+.result-hero {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  padding: 48px 36px;
+  text-align: center;
+  box-shadow: var(--shadow-md);
+  margin-bottom: 20px;
+}
+
+.result-emoji-wrap {
+  font-size: 4rem;
+  line-height: 1;
+  margin-bottom: 20px;
+  display: block;
+}
+
+.result-title-text {
+  font-size: clamp(1.4rem, 3vw, 1.8rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.3;
+  color: var(--text);
+  margin-bottom: 8px;
+  word-break: keep-all;
+}
+
+.result-score-big {
+  font-size: clamp(3rem, 8vw, 4.5rem);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  color: var(--blue-soft);
+  line-height: 1;
+  margin: 16px 0;
+}
+
+.result-comment {
+  font-size: 0.97rem;
+  color: var(--text-muted);
+  line-height: 1.65;
+  margin-bottom: 24px;
+}
+
+.result-meta {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+  font-variant-numeric: tabular-nums;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin: 28px 0 0;
+}
+
+.stat-card {
+  background: var(--surface-alt);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 20px;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.18s var(--ease-smooth);
+  position: relative;
+  overflow: hidden;
+}
+.stat-card::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, var(--blue-tint), transparent);
+  opacity: 0;
+  transition: opacity 0.18s;
+}
+.stat-card:hover { border-color: var(--blue-vivid); transform: translateY(-2px); box-shadow: var(--shadow-md); }
+.stat-card:hover::before { opacity: 1; }
+.stat-card:active { transform: translateY(0); }
+
+.stat-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+}
+
+.stat-value {
+  font-size: 1.8rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+
+.stat-pct {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--blue-soft);
+}
+
+.stat-arrow {
+  position: absolute;
+  right: 16px; top: 50%;
+  transform: translateY(-50%);
+  font-size: 1.2rem;
+  color: var(--border);
+  transition: all 0.18s;
+}
+.stat-card:hover .stat-arrow { color: var(--blue-vivid); transform: translateY(-50%) translateX(2px); }
+
+.result-actions {
+  display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px;
+}
+
+.btn-action {
+  flex: 1; min-width: 140px;
+  padding: 14px 18px;
+  border-radius: var(--radius-sm);
+  border: 1.5px solid var(--border);
+  background: var(--surface-alt);
+  color: var(--text);
+  font-size: 0.9rem;
+  font-weight: 700;
+  transition: all 0.16s var(--ease-smooth);
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+}
+.btn-action:hover { background: var(--border); }
+.btn-action.btn-action-primary {
+  background: var(--blue-vivid);
+  border-color: var(--blue-vivid);
+  color: #fff;
+  box-shadow: 0 4px 14px rgba(59,130,246,0.3);
+}
+.btn-action.btn-action-primary:hover { background: #2563eb; }
+
+/* Review List */
+.review-list-wrap { margin-top: 20px; }
+.review-list-title {
+  font-size: 1rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--text);
+  margin-bottom: 14px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+.review-item {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 4px solid;
+  border-radius: var(--radius-sm);
+  padding: 20px;
+  margin-bottom: 10px;
+}
+.review-item.review-ok   { border-left-color: var(--green-vivid); }
+.review-item.review-fail { border-left-color: var(--red-vivid); }
+
+.review-item-meta {
+  display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+
+.review-q-text { font-size: 0.97rem; font-weight: 600; line-height: 1.6; margin-bottom: 12px; }
+.review-my-ans { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 4px; }
+.review-correct-ans { font-size: 0.85rem; color: var(--green-vivid); font-weight: 700; margin-bottom: 10px; }
+.review-feedback-text { font-size: 0.85rem; color: var(--text-feedback); line-height: 1.6; }
+
+/* ===========================
+   Mini Quiz Hero
+   =========================== */
+.mini-hero {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 28px;
+  margin-bottom: 20px;
+  position: relative;
+  overflow: hidden;
+}
+.mini-hero::before {
+  content: '';
+  position: absolute; top: -60px; right: -60px;
+  width: 200px; height: 200px;
+  background: radial-gradient(circle, var(--blue-glow), transparent 70%);
+  pointer-events: none;
+}
+
+.btn-back {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: transparent; border: none;
+  color: var(--text-muted);
+  font-weight: 700; font-size: 0.85rem;
+  padding: 0; margin-bottom: 16px;
+  cursor: pointer;
+  transition: color 0.16s;
+}
+.btn-back:hover { color: var(--blue-soft); }
+
+.mini-hero-title {
+  font-size: 1.5rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--blue-soft);
+  margin-bottom: 8px;
+}
+
+.mini-hero-desc {
+  font-size: 0.93rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+  word-break: keep-all;
+}
+
+/* ===========================
+   Modal
+   =========================== */
+.modal-overlay {
+  display: none; position: fixed; inset: 0;
+  background: rgba(0,0,0,0.65);
+  backdrop-filter: blur(8px);
+  z-index: 300;
+  align-items: center; justify-content: center;
+}
+.modal-overlay.open { display: flex; animation: fadeIn 0.2s var(--ease-smooth); }
+
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+.modal-box {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 36px 32px;
+  width: 100%; max-width: 400px;
+  box-shadow: var(--shadow-lg);
+  text-align: center;
+  animation: screenIn 0.3s var(--ease-spring);
+}
+
+.modal-title {
+  font-size: 1.2rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  margin-bottom: 12px;
+}
+
+.modal-desc {
+  font-size: 0.93rem;
+  line-height: 1.65;
+  color: var(--text-muted);
+  margin-bottom: 28px;
+}
+
+.modal-actions { display: flex; gap: 10px; }
+
+/* ===========================
+   Toast
+   =========================== */
+#toast-container {
+  position: fixed; bottom: 36px; left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999; pointer-events: none;
+}
+
+.toast {
+  background: #1a1d24;
+  border: 1px solid #3d4452;
+  color: #f8f9fb;
+  border-radius: 999px;
+  padding: 12px 24px;
+  font-weight: 600;
+  font-size: 0.88rem;
+  opacity: 0;
+  transform: translateY(12px) scale(0.96);
+  transition: all 0.25s var(--ease-spring);
+  backdrop-filter: blur(10px);
+  box-shadow: var(--shadow-md);
+  white-space: nowrap;
+}
+.toast.toast-show { opacity: 1; transform: translateY(0) scale(1); }
+
+/* ===========================
+   Leaderboard Screen
+   =========================== */
+.lb-hero {
+  text-align: center; margin-bottom: 28px;
+}
+
+.lb-hero-title {
+  font-size: clamp(1.8rem, 4vw, 2.4rem);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  color: var(--text);
+  margin-bottom: 8px;
+}
+
+.lb-hero-sub {
+  font-size: 0.93rem;
+  color: var(--text-muted);
+}
+
+.lb-toolbar {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 16px; gap: 10px; flex-wrap: wrap;
+}
+
+.lb-count {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  letter-spacing: 0.04em;
+}
+
+.btn-clear-lb {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: transparent;
+  border: 1px solid var(--red-border);
+  color: var(--red-soft);
+  border-radius: 999px;
+  padding: 6px 14px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.16s;
+}
+.btn-clear-lb:hover { background: var(--red-tint); }
+
+.lb-table-wrap {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+}
+
+.lb-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.93rem;
+}
+
+.lb-table thead {
+  background: var(--surface-alt);
+  border-bottom: 1px solid var(--border);
+}
+
+.lb-table th {
+  padding: 14px 20px;
+  text-align: left;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.lb-table th:last-child,
+.lb-table td:last-child { text-align: right; }
+
+.lb-table tbody tr {
+  border-bottom: 1px solid var(--border);
+  transition: background 0.14s;
+}
+.lb-table tbody tr:last-child { border-bottom: none; }
+.lb-table tbody tr:hover { background: var(--surface-alt); }
+.lb-table tbody tr:focus-within { background: var(--blue-tint); outline: 2px solid var(--blue-vivid); outline-offset: -2px; }
+
+.lb-table td {
+  padding: 14px 20px;
+  color: var(--text);
+  font-weight: 500;
+  vertical-align: middle;
+}
+
+.lb-rank {
+  font-weight: 800;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  min-width: 32px;
+}
+.lb-rank.rank-1 { color: var(--amber-vivid); }
+.lb-rank.rank-2 { color: #6b7384; }
+.lb-rank.rank-3 { color: #cd7f32; }
+
+.lb-name {
+  font-weight: 700;
+  color: var(--text);
+}
+
+.lb-score {
+  font-weight: 800;
+  font-size: 1.05rem;
+  color: var(--blue-soft);
+}
+
+.lb-pct {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.lb-date {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.lb-empty {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--text-muted);
+  font-size: 0.97rem;
+}
+
+.lb-empty-icon { font-size: 2.5rem; margin-bottom: 12px; display: block; }
+
+.lb-back-btn {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  margin-top: 20px;
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 14px;
+  font-size: 0.93rem;
+  font-weight: 700;
+  color: var(--text);
+  cursor: pointer;
+  transition: all 0.16s;
+  width: 100%;
+}
+.lb-back-btn:hover { background: var(--border); }
+
+/* Responsive */
+@media (max-width: 600px) {
+  .login-card { padding: 24px 20px; }
+  .q-card, .result-hero { padding: 24px 20px; }
+  .stats-grid { grid-template-columns: 1fr 1fr; }
+  .result-actions, .modal-actions { flex-direction: column; }
+  .screen { top: 52px; padding: 20px 14px 60px; }
+  .lb-table th:nth-child(4),
+  .lb-table td:nth-child(4) { display: none; }
+}
+
+/* Answer Sheet */
+.as-item {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  margin-bottom: 12px;
+  overflow: hidden;
+}
+
+.as-item-header {
+  display: flex; align-items: flex-start; gap: 14px;
+  padding: 20px 24px;
+}
+
+.as-q-num {
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+  flex-shrink: 0;
+  margin-top: 2px;
+  min-width: 28px;
+}
+
+.as-q-body { flex: 1; }
+
+.as-q-text {
+  font-size: 0.97rem;
+  font-weight: 600;
+  line-height: 1.65;
+  color: var(--text);
+  margin-bottom: 14px;
+  white-space: pre-line;
+}
+
+.as-options { display: flex; flex-direction: column; gap: 6px; }
+
+.as-opt {
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: 10px 14px;
+  border-radius: var(--radius-xs);
+  border: 1.5px solid var(--border);
+  font-size: 0.88rem;
+  font-weight: 500;
+  line-height: 1.5;
+  color: var(--text-muted);
+  background: var(--surface-alt);
+  transition: all 0.14s;
+}
+
+.as-opt-num {
+  font-weight: 800; font-size: 0.78rem;
+  color: var(--text-muted); flex-shrink: 0;
+  min-width: 18px; margin-top: 1px;
+}
+
+.as-opt.as-opt-answer {
+  border-color: var(--green-border);
+  background: var(--green-tint);
+  color: var(--text);
+  font-weight: 700;
+}
+
+.as-opt.as-opt-answer .as-opt-num { color: var(--green-vivid); }
+
+.as-answer-badge {
+  display: inline-flex; align-items: center; gap: 5px;
+  background: var(--green-tint);
+  border: 1px solid var(--green-border);
+  color: var(--green-vivid);
+  font-size: 0.75rem; font-weight: 800;
+  border-radius: 999px; padding: 3px 10px;
+  margin-left: auto; flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.as-exp {
+  border-top: 1px solid var(--border);
+  padding: 16px 24px;
+  background: var(--surface-alt);
+  display: flex; flex-direction: column; gap: 12px;
+}
+
+.as-exp-block { }
+
+.as-exp-label {
+  font-size: 0.7rem; font-weight: 800;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--text-label); margin-bottom: 5px;
+}
+
+.as-exp-text {
+  font-size: 0.88rem; line-height: 1.65; color: var(--text-feedback);
+}
+
+.as-tip {
+  display: flex; gap: 8px; align-items: flex-start;
+  background: var(--blue-tint);
+  border: 1px solid rgba(59,130,246,0.2);
+  border-radius: var(--radius-xs);
+  padding: 10px 14px;
+  font-size: 0.85rem; line-height: 1.6;
+  color: var(--text-feedback);
+}
+
+.as-principle-divider {
+  display: flex; align-items: center; gap: 12px;
+  margin: 28px 0 16px;
+}
+
+.as-principle-divider-line {
+  flex: 1; height: 1px; background: var(--border);
+}
+
+.as-principle-divider-label {
+  font-size: 0.78rem; font-weight: 800;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+</style>
+</head>
+<body>
+
+<div aria-live="polite" aria-atomic="true" class="sr-only" id="live-region" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(1px,1px,1px,1px); clip-path: inset(100%);"></div>
+<div id="toast-container" aria-live="assertive" aria-atomic="true"></div>
+
+<div class="modal-overlay" id="home-modal" role="dialog" aria-modal="true" aria-labelledby="home-modal-title">
+  <div class="modal-box">
+    <p style="font-size:1.8rem;margin-bottom:12px;">🏠</p>
+    <h2 class="modal-title" id="home-modal-title">홈으로 이동할까요?</h2>
+    <p class="modal-desc">현재 진행 상황은 <strong style="color:var(--red-soft);">저장되지 않습니다.</strong></p>
+    <div class="modal-actions">
+      <button class="btn-nav" onclick="closeHomeModal()" type="button" style="flex:1;">계속 풀기</button>
+      <button class="btn-action btn-action-primary" onclick="confirmGoHome()" type="button" style="flex:1;background:var(--red-vivid);border-color:var(--red-vivid);">이동하기</button>
+    </div>
+  </div>
+</div>
+
+<nav id="toolbar" role="toolbar" aria-label="설정 도구 모음">
+  <button class="toolbar-pill" id="btn-home" onclick="goHome()" aria-label="홈으로 이동" style="display:none;">
+    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 6.5L8 2l6 4.5V14H2z"/><path d="M6 14v-4h4v4"/></svg>
+    처음으로
+  </button>
+  <span class="toolbar-title">웹 접근성 역량 퀴즈</span>
+
+  <button class="toolbar-pill" id="btn-theme" onclick="toggleTheme()" aria-label="테마 전환">
+    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="8" cy="8" r="3"/><path d="M8 1v2M8 13v2M1 8h2M13 8h2M3.05 3.05l1.41 1.41M11.54 11.54l1.41 1.41M3.05 12.95l1.41-1.41M11.54 4.46l1.41-1.41"/></svg>
+    테마
+  </button>
+  <button class="toolbar-pill" id="btn-auto" onclick="toggleAutoAdvance()" aria-label="자동 넘김 켜기/끄기">
+    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="8" cy="8" r="6"/><path d="M8 5v3l2 2"/></svg>
+    자동넘김 ON
+  </button>
+</nav>
+
+<main>
+
+<section id="screen-login" class="screen active" aria-labelledby="login-h1">
+  <div class="login-shell">
+    <div class="login-hero">
+      <span class="login-eyebrow">Accessibility Assessment</span>
+      <h1 class="login-h1" id="login-h1">웹 <em>접근성</em><br>역량 퀴즈</h1>
+      <p class="login-sub">WCAG 2.2 · KWCAG 기반 실무 평가</p>
+    </div>
+    <div class="login-card">
+      <div class="meta-chips">
+        <span class="meta-chip">📝 총 40문항</span>
+        <span class="meta-chip">🎯 원칙당 10문항</span>
+        <span class="meta-chip">⏱ 자동 넘김</span>
+      </div>
+      <label class="field-label" for="username-input">이름</label>
+      <input class="field-input" type="text" id="username-input" placeholder="예: 세렌" maxlength="20" aria-required="true" autocomplete="name" onkeydown="if(event.key==='Enter'){startQuiz();}">
+      <button class="btn-start" onclick="startQuiz()" type="button">
+        평가 시작하기
+        <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9h10M9 4l5 5-5 5"/></svg>
+      </button>
+    </div>
+  </div>
+</section>
+
+<section id="screen-quiz" class="screen" aria-labelledby="quiz-section-title">
+  <h2 id="quiz-section-title" class="sr-only">문항 풀이</h2>
+  <div class="content-wrap">
+    <div class="progress-wrap" role="region" aria-label="진행 상태">
+      <div class="progress-meta">
+        <span class="progress-label" id="progress-text">1 / 40 문항</span>
+        <span class="progress-score" id="score-text">0점</span>
+      </div>
+      <div class="progress-track" role="progressbar" id="progress-bar-wrap" aria-valuenow="1" aria-valuemax="40" aria-label="문항 진행률">
+        <div class="progress-fill" id="progress-fill" style="width:2.5%"></div>
+      </div>
+    </div>
+
+    <article class="q-card" id="question-card" aria-label="현재 문항">
+      <div class="q-meta">
+        <span id="q-badge" class="badge"></span>
+        <span id="q-category" class="q-category"></span>
+        <span id="q-number" class="q-num"></span>
+      </div>
+      <p id="q-text" class="q-text"></p>
+      <fieldset class="options-group" id="options-fieldset">
+        <legend class="opt-legend" id="options-legend">선택지 (1~4번 키보드로 선택 가능)</legend>
+        <div id="options-container"></div>
+      </fieldset>
+      <div id="feedback-area"></div>
+      <div id="auto-advance-area"></div>
+      <div class="nav-row">
+        <button class="btn-nav" id="btn-prev" onclick="navigate(-1)" type="button">← 이전</button>
+        <button class="btn-nav btn-nav-primary" id="btn-next" type="button" disabled>다음 →</button>
+      </div>
+    </article>
+  </div>
+</section>
+
+<section id="screen-result" class="screen" aria-labelledby="result-title-el">
+  <div class="content-wrap">
+    <div class="result-hero">
+      <span class="result-emoji-wrap" id="result-emoji" aria-hidden="true"></span>
+      <h1 class="result-title-text" id="result-title-el"></h1>
+      <div class="result-score-big" id="result-score" aria-label="점수"></div>
+      <p class="result-comment" id="result-comment"></p>
+      <div id="result-meta-area"></div>
+      <div class="stats-grid" id="stats-grid"></div>
+    </div>
+    <div class="result-actions">
+      <button class="btn-action" onclick="startReviewMode()" type="button" id="btn-review">📝 전체 오답 다시 풀기</button>
+      <button class="btn-action" onclick="restartQuiz()" type="button">🔄 처음부터</button>
+    </div>
+    <div class="review-list-wrap" id="review-list" aria-label="전체 풀이 내역"></div>
+  </div>
+</section>
+
+<section id="screen-review" class="screen" aria-labelledby="review-title">
+  <h2 id="review-title" class="sr-only">오답 노트 복습</h2>
+  <div class="content-wrap">
+    <div class="progress-wrap">
+      <div class="progress-meta">
+        <span class="progress-label">📝 전체 오답 복습</span>
+        <span class="progress-score" id="review-progress-text"></span>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill" id="review-progress-fill" style="width:10%"></div>
+      </div>
+    </div>
+    <article class="q-card" aria-label="복습 문항">
+      <div class="q-meta">
+        <span id="rq-badge" class="badge"></span>
+        <span id="rq-category" class="q-category"></span>
+        <span id="rq-number" class="q-num"></span>
+      </div>
+      <p id="rq-text" class="q-text"></p>
+      <fieldset class="options-group">
+        <legend class="opt-legend">복습 선택지</legend>
+        <div id="review-options-container"></div>
+      </fieldset>
+      <div id="review-feedback-area"></div>
+      <div id="review-auto-area"></div>
+      <div class="nav-row">
+        <button class="btn-nav" id="btn-review-prev" onclick="reviewNavigateDir(-1)" type="button">← 이전</button>
+        <button class="btn-nav" onclick="showResult()" type="button">결과로 돌아가기</button>
+        <button class="btn-nav btn-nav-primary" id="btn-review-next" type="button" disabled>다음 →</button>
+      </div>
+    </article>
+  </div>
+</section>
+
+<section id="screen-mini-quiz" class="screen" aria-labelledby="mini-quiz-title">
+  <div class="content-wrap">
+    <div class="mini-hero">
+      <button class="btn-back" onclick="showResult()">← 결과로 돌아가기</button>
+      <h2 class="mini-hero-title" id="mini-quiz-title">원칙명</h2>
+      <p class="mini-hero-desc" id="mini-quiz-desc">원칙 설명</p>
+    </div>
+    <div class="progress-wrap">
+      <div class="progress-meta">
+        <span class="progress-label">🎯 핵심 복습 (3문항)</span>
+        <span class="progress-score" id="mini-progress-text">1 / 3</span>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill" id="mini-progress-fill" style="width:33%"></div>
+      </div>
+    </div>
+    <article class="q-card" aria-label="미니 복습 문항">
+      <div class="q-meta">
+        <span id="mq-badge" class="badge"></span>
+        <span id="mq-category" class="q-category"></span>
+      </div>
+      <p id="mq-text" class="q-text"></p>
+      <fieldset class="options-group">
+        <legend class="opt-legend">선택지</legend>
+        <div id="mini-options-container"></div>
+      </fieldset>
+      <div id="mini-feedback-area"></div>
+      <div id="mini-auto-area"></div>
+      <div class="nav-row">
+        <button class="btn-nav" id="btn-mini-prev" onclick="miniNavigateDir(-1)" type="button">← 이전</button>
+        <button class="btn-nav btn-nav-primary" id="btn-mini-next" type="button" disabled>다음 →</button>
+      </div>
+    </article>
+  </div>
+</section>
+
+<section id="screen-leaderboard" class="screen" aria-labelledby="lb-title">
+  <div class="content-wrap">
+    <div class="lb-hero">
+      <p style="font-size:2.5rem;margin-bottom:12px;" aria-hidden="true">🏆</p>
+      <h1 class="lb-hero-title" id="lb-title">결과 현황</h1>
+      <p class="lb-hero-sub">지금까지 퀴즈를 완료한 사용자들의 점수 기록입니다</p>
+    </div>
+
+    <div class="lb-toolbar">
+      <span class="lb-count" id="lb-count" aria-live="polite"></span>
+      <button class="btn-clear-lb" onclick="clearLeaderboard()" type="button" aria-label="모든 기록 삭제">
+        <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 4h12M6 4V2h4v2M5 4l.5 10h5L11 4"/></svg>
+        기록 초기화
+      </button>
+    </div>
+
+    <div class="lb-table-wrap">
+      <table class="lb-table" aria-label="퀴즈 결과 목록">
+        <thead>
+          <tr>
+            <th scope="col">순위</th>
+            <th scope="col">이름</th>
+            <th scope="col">점수</th>
+            <th scope="col">날짜</th>
+          </tr>
+        </thead>
+        <tbody id="lb-tbody"></tbody>
+      </table>
+    </div>
+
+    <button class="lb-back-btn" onclick="goBackFromLeaderboard()" type="button">
+      ← 퀴즈로 돌아가기
+    </button>
+
+    <div style="margin-top: 40px;">
+      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom: 16px; flex-wrap:wrap; gap:10px;">
+        <div>
+          <h2 style="font-family:'Syne',sans-serif; font-size:1.3rem; font-weight:800; letter-spacing:-0.03em; color:var(--text);">📄 전체 문제지</h2>
+          <p style="font-size:0.82rem; color:var(--text-muted); margin-top:4px;">교육용 — 정답 및 해설 포함</p>
+        </div>
+        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+          <button class="toolbar-pill" onclick="toggleAllAnswers()" id="btn-toggle-answers" style="font-size:0.82rem;">✅ 정답 숨기기</button>
+          <button class="toolbar-pill" onclick="toggleAllExplanations()" id="btn-toggle-exp" style="font-size:0.82rem;">💡 해설 숨기기</button>
+        </div>
+      </div>
+      <div id="answer-sheet-list"></div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<script>
+(function() {
+'use strict';
+
+/* ===========================
+   문항 데이터 (40문항)
+   =========================== */
+const QUESTIONS = [
+  { id: 1, principle: 1, category: '1.1.1. (적절한 대체 텍스트 제공)', difficulty: 'beginner', text: '다음 중 장식 목적(꾸밈용)으로만 사용된 이미지에 올바르게 대체 텍스트를 적용한 코드는?', options: ['<img src="deco.png" alt="장식 이미지">', '<img src="deco.png" alt="">', '<img src="deco.png" title="장식">', '<img src="deco.png"> (alt 속성 없음)'], answer: 1, explanation: { correct: '장식 목적 이미지는 alt=""(빈 값)를 제공하여 보조 기술이 해당 이미지를 무시하도록 해야 합니다 (검사항목 1.1.1. 적절한 대체 텍스트 제공).', wrongs: ['❌ "장식 이미지"라는 설명은 보조 기술 사용자에게 불필요한 정보를 제공합니다.', '✅ 빈 alt 속성이 올바른 방법입니다.', '❌ title 속성은 보조 기술에 따라 읽히지 않을 수 있어 신뢰성이 낮습니다.', '❌ alt 속성이 없으면 화면낭독프로그램이 파일명을 읽을 수 있습니다.'], tip: '💡 이미지의 목적에 따라 ① 의미 있는 이미지→구체적 alt, ② 장식 이미지→alt="", ③ 기능적 이미지→기능 설명 alt를 구분하여 적용하세요.' } },
+  { id: 2, principle: 1, category: '1.1.1. (적절한 대체 텍스트 제공)', difficulty: 'beginner', text: '검색 기능을 나타내는 돋보기 아이콘(img 요소)의 alt 속성으로 가장 적절한 값은?', options: ['alt="돋보기 이미지"', 'alt="돋보기 아이콘"', 'alt="검색"', 'alt=""'], answer: 2, explanation: { correct: '기능을 수행하는 아이콘은 그 아이콘의 모양이 아닌 기능(검색)을 설명해야 합니다 (검사항목 1.1.1. 적절한 대체 텍스트 제공).', wrongs: ['❌ "돋보기 이미지"는 이미지의 모양을 설명하는 것으로, 기능을 알 수 없습니다.', '❌ "돋보기 아이콘"도 기능이 아닌 외형 설명입니다.', '✅ "검색"은 해당 이미지의 기능을 직접 설명합니다.', '❌ 기능을 수행하는 이미지에 빈 alt는 사용자가 기능을 인식하지 못하게 합니다.'], tip: '💡 버튼·링크에 사용된 이미지는 클릭 시 수행될 기능을 설명하고, "~이미지", "~아이콘" 같은 불필요한 단어는 포함하지 마세요.' } },
+  { id: 3, principle: 1, category: '1.1.1. (적절한 대체 텍스트 제공)', difficulty: 'mid', text: '5개의 별 이미지로 "5점 만점 중 3점"인 별점을 표현할 때 가장 올바른 처리 방법은?', options: ['5개 모든 이미지에 각각 alt="별점" 제공', '첫 번째 이미지에 alt="5점 만점 중 3점", 나머지 4개는 alt=""', '5개 모든 이미지에 alt="5점 만점 중 3점" 동일하게 제공', '5개 모두 alt="" (빈 값) 제공'], answer: 1, explanation: { correct: '여러 이미지가 단일 정보를 전달할 때는 첫 번째 이미지에만 전체 정보를 담고 나머지는 alt=""로 설정하여 중복 정보 전달을 방지합니다 (검사항목 1.1.1. 적절한 대체 텍스트 제공).', wrongs: ['❌ 각각 "별점"이라고 제공하면 내용이 불명확하고 5번 반복됩니다.', '✅ 첫 번째 이미지에만 정보를 담고 나머지는 빈 값이 올바릅니다.', '❌ 동일한 정보가 5번 중복되어 화면낭독프로그램 사용자에게 불필요한 반복이 발생합니다.', '❌ 모두 빈 값이면 별점 정보가 아예 전달되지 않습니다.'], tip: '💡 이미지 그룹이 단일 의미를 전달하는 경우, 대표 이미지 하나에만 정보를 담고 나머지는 보조 기술이 무시하도록 설정하세요.' } },
+  { id: 4, principle: 1, category: '1.2.1. (자막 제공)', difficulty: 'mid', text: '멀티미디어 콘텐츠에서 자막을 제공할 때 반드시 포함해야 할 내용으로 옳은 것은?', options: ['등장인물의 대화 내용만 포함하면 충분하다', '화자 구분 없이 대화를 일괄 자막으로 제공한다', '대화뿐만 아니라 의미 있는 음향 효과, 화자 정보 등 비언어적 소리 정보도 포함해야 한다', '사용자가 필요에 따라 켜거나 끌 수 있는 열린 자막을 제공한다'], answer: 2, explanation: { correct: '자막은 대화뿐 아니라 음향 효과, 배경음, 화자 정보 등 청각적 요소 전체를 포함하여 소리를 듣기 어려운 사용자가 맥락을 완전히 이해할 수 있도록 해야 합니다 (검사항목 1.2.1. 자막 제공).', wrongs: ['❌ 대화 외 음향 효과 등도 포함해야 합니다.', '❌ 여러 화자가 등장하는 경우 화자 식별 정보를 함께 제공해야 합니다.', '✅ 올바른 설명입니다.', '❌ 열린 자막은 사용자가 개별적으로 조정할 수 없는 자막이다.'], tip: '💡 닫힌 자막(Closed Caption) 방식이 사용자가 크기, 색상, 위치를 조정할 수 있어 열린 자막(Open Caption)보다 더 유용합니다.' } },
+  { id: 5, principle: 1, category: '1.1.1. (적절한 대체 텍스트 제공)', difficulty: 'mid', text: '쇼핑몰 개편 작업 중 이벤트 배너 이미지에 alt 속성이 누락된 것을 발견했습니다. 화면낭독프로그램 사용자에게 발생할 가장 직접적인 문제는?', options: ['이미지가 화면에 표시되지 않는다', '화면낭독프로그램이 이미지 파일명이나 URL을 읽거나, 단순히 "이미지"라고 낭독할 수 있다', '이미지가 자동으로 장식 이미지로 처리된다', '화면낭독프로그램이 이미지를 건너뛰고 다음 콘텐츠를 읽는다'], answer: 1, explanation: { correct: 'alt 속성이 없으면 화면낭독프로그램은 파일명(bn1.jpg) 또는 URL을 읽거나, "이미지/그래픽"이라고만 낭독할 수 있어 사용자가 콘텐츠를 이해하기 어렵습니다 (검사항목 1.1.1. 적절한 대체 텍스트 제공).', wrongs: ['❌ alt 속성 누락은 이미지의 화면 표시에 영향을 주지 않습니다.', '✅ 올바른 설명입니다.', '❌ alt 속성 없음은 장식 이미지(alt="")와 다릅니다. 보조 기술은 이를 자동으로 구분하지 않습니다.', '❌ alt=""(빈 값)이 있어야 보조 기술이 무시합니다. alt 속성 자체가 없으면 다릅니다.'], tip: '💡 alt 속성 누락과 alt=""(빈 값)는 전혀 다릅니다. 빈 값은 의도적으로 무시하도록 지정한 것이고, 누락은 보조 기술이 대체 정보를 임의로 생성하게 합니다.' } },
+  { id: 6, principle: 1, category: '1.3.1. (표의 구성)', difficulty: 'mid', text: 'HTML 표에서 표 제목을 caption 요소로 제공했지만, CSS에서 display:none으로 숨긴 경우의 문제점은?', options: ['시각적으로는 숨겨지지만 보조 기술에는 정상적으로 전달되는 불일치가 발생한다', '화면뿐 아니라 보조 기술에도 인식되지 않아 표 제목 정보가 전달되지 않는다', '화면낭독프로그램이 caption을 두 번 읽는 문제가 발생한다', '표의 시각적 레이아웃이 무너진다'], answer: 1, explanation: { correct: 'display:none은 화면과 보조 기술 모두에서 해당 요소를 숨깁니다. 접근성이 필요한 숨김 처리는 .visually-hidden(clip-path 기반) CSS를 사용해야 합니다 (검사항목 1.3.1. 표의 구성).', wrongs: ['❌ display:none은 보조 기술에서도 인식되지 않습니다.', '✅ 올바른 설명입니다.', '❌ 보조 기술이 caption을 아예 읽지 못하는 것이 문제입니다.', '❌ caption의 display:none은 레이아웃보다 접근성 문제가 핵심입니다.'], tip: '💡 visibility:hidden, font-size:0, display:none은 모두 보조 기술에서도 숨겨집니다. 보조 기술에는 전달하고 화면에서만 숨기려면 visually-hidden 기법을 사용하세요.' } },
+  { id: 7, principle: 1, category: '1.3.2. (콘텐츠의 선형구조)', difficulty: 'advanced', text: '페이지 접근 시 자동으로 표시되는 모달 팝업을 HTML에 구현할 때, 접근성을 가장 잘 보장하는 배치 위치는?', options: ['<footer> 요소 바로 앞에 배치', '<body> 요소 시작 직후 최상단에 배치', '본문 내용 중간에 삽입', '</body> 닫기 태그 바로 앞에 배치'], answer: 1, explanation: { correct: '모달 팝업은 HTML body 요소 시작 직후에 배치해야 합니다. (검사항목 1.3.2. 콘텐츠의 선형구조).', wrongs: ['❌ footer 앞에 배치하면 화면낭독프로그램 사용자가 모든 콘텐츠를 탐색한 후에야 팝업을 만납니다.', '✅ body 최상단 배치가 올바릅니다.', '❌ 본문 중간에 삽입하면 화면 시각과 보조 기술 탐색 순서가 불일치합니다.', '❌ 닫기 태그 앞은 팝업을 가장 나중에 탐색하게 됩니다.'], tip: '💡 모달 팝업은 body 최상단에 배치합니다. 또한 role="dialog", aria-modal="true"등 ARIA 속성을 함께 사용하세요.' } },
+  { id: 8, principle: 1, category: '1.1.1. (적절한 대체 텍스트 제공)', difficulty: 'beginner', text: '검색 기능을 나타내는 SVG 돋보기 아이콘을 버튼으로 사용할 때, 보조 기술 사용자가 아이콘의 의미를 인식할 수 있도록 하는 가장 적절한 접근성 처리 방법은?', options: ['아이콘이 전달하는 의미를 숨김 텍스트, aria-label, aria-labelledby 등으로 제공한다', 'SVG 내부에 title 요소만 추가하여 아이콘의 의미를 제공한다', '아이콘 옆에 텍스트를 시각적으로 배치하고 별도의 접근성 속성은 사용하지 않는다', '아이콘의 모양이 일반적으로 알려진 형태이므로 별도의 설명 없이 그대로 사용한다'], answer: 0, explanation: { correct: '아이콘처럼 텍스트가 아닌 콘텐츠가 의미나 기능을 전달하는 경우, 숨김 텍스트나 aria-label, aria-labelledby 등을 사용해 보조 기술이 인식할 수 있는 접근성 이름을 제공하고 보조 기술에서 실제로 동작하는지 확인해야 합니다 (검사항목 1.1.1 / 4.2.1).', wrongs: ['✅ 아이콘의 의미를 보조 기술이 인식할 수 있도록 접근성 이름을 제공하는 올바른 방법입니다.', '❌ 일부 보조 기술에서는 title 요소만으로 의미가 전달되지 않을 수 있습니다.', '❌ 텍스트가 시각적으로만 존재하면 보조 기술이 아이콘과의 관계를 정확히 인식하지 못할 수 있습니다.', '❌ 시각 정보만으로는 보조 기술 사용자가 의미를 인식할 수 없습니다.'], tip: '💡 아이콘 버튼에 접근성 제공 방법: ① aria-label 사용 ② 숨김 텍스트(<span class="visually-hidden">검색</span>) ③ SVG 내 <title> + aria-labelledby. 셋 중 하나를 선택하되, aria-label이나 숨김 텍스트가 가장 간편합니다.' } },
+  { id: 9, principle: 1, category: '1.4.3. (텍스트 콘텐츠의 명도 대비)', difficulty: 'mid', text: 'KWCAG 1.4.3에서 14pt 미만의 굵은(Bold) 텍스트에 요구되는 최소 명도 대비 기준은?', options: ['3:1', '4.5:1', '5:1', '21:1'], answer: 1, explanation: { correct: '18pt 미만의 일반 텍스트와 14pt 미만의 굵은 텍스트에는 최소 4.5:1 이상의 명도 대비가 필요합니다 (검사항목 1.4.3. 텍스트 콘텐츠의 명도 대비). 참고로 18pt 이상 일반 또는 14pt 이상 굵은 텍스트는 3:1 이상입니다.', wrongs: ['❌ 3:1은 대형 텍스트(18pt 이상 일반, 14pt 이상 굵게)에 적용됩니다.', '✅ 4.5:1이 소형 텍스트의 기준입니다.', '❌ 5:1은 정답이 아닙니다.', '❌ 21:1은 정답이 아닙니다.'], tip: '💡 명도 대비 기준인 3:1과 4.5:1은 반올림 없이 실제 수치로 비교되며, 예를 들어 4.499:1은 4.5:1 기준을 충족하지 못하는 것으로 판단하므로 정확한 측정이 중요합니다.' } },
+  { id: 10, principle: 1, category: '1.4.2. (자동 재생 금지)', difficulty: 'advanced', text: '음식 레시피 페이지 하단에 소리가 포함된 동영상이 자동 재생되고 있으며, 재생 제어 버튼은 동영상 바로 옆에만 있습니다. 화면낭독프로그램 사용자에게 발생하는 가장 심각한 복합 문제는?', options: ['동영상 해상도가 낮아 시각 콘텐츠 파악이 어렵다', '자동 재생 소리가 화면낭독프로그램 음성과 겹쳐 탐색이 방해되고, 제어 버튼에 접근하려면 페이지 하단까지 탐색해야 단다', '자동 재생으로 인해 데이터 사용량이 증가한다', '동영상 자막이 제공되지 않아 청각 장애인이 내용 파악이 어렵다'], answer: 1, explanation: { correct: '자동 재생 소리가 화면낭독프로그램 음성과 동시에 재생되면 정보 탐색이 불가능해집니다. 게다가 제어 버튼이 페이지 하단에만 있으면 화면낭독프로그램 사용자는 모든 콘텐츠를 탐색 후에야 제어할 수 있습니다. 문서 시작 부분에 제어 기능을 제공해야 합니다 (검사항목 1.4.2. 자동 재생 금지).', wrongs: ['❌ 해상도는 접근성 문제와 무관합니다.', '✅ 가장 심각한 복합 접근성 문제입니다.', '❌ 데이터 사용량은 접근성 문제가 아닙니다.', '❌ 자막 문제도 중요하지만 이 상황의 가장 심각한 문제는 자동 재생 + 제어 위치입니다.'], tip: '💡 자동 재생이 불가피하면 ① 3초 이내 자동 정지 ② ESC 키로 즉시 정지 ③ 문서 상단에 음소거/정지 버튼 배치 중 하나 이상을 반드시 제공해야 합니다.' } },
+  { id: 11, principle: 2, category: '2.1.1. (키보드 사용 보장)', difficulty: 'beginner', text: '웹 페이지에서 키보드 접근성을 보장하기 위해 가장 기본적으로 고려해야 할 사항은?', options: ['모든 기능에 마우스 더블클릭 대안을 제공한다', '상호작용 요소를 a, button, input 등 HTML 기본 요소로 구현한다', '모든 요소에 tabindex="1" 이상의 값을 명시적으로 지정한다', '키보드 단축키를 모든 기능에 최대한 많이 제공한다'], answer: 1, explanation: { correct: '상호작용 요소는 기본적으로 키보드 초점을 받을 수 있는 a, button, input 등 HTML 기본 요소로 구현해야 합니다. 이 요소들은 Tab 키 탐색, Enter/Space 실행이 기본으로 보장됩니다 (검사항목 2.1.1. 키보드 사용 보장).', wrongs: ['❌ 더블클릭 대안보다 키보드 기본 접근이 우선입니다.', '✅ HTML 기본 요소 사용이 가장 중요합니다.', '❌ tabindex="1" 이상의 양수 값은 초점 순서를 강제 변경하여 혼란을 야기하므로 지양해야 합니다.', '❌ 단축키 제공도 중요하지만, 기본 키보드 접근이 더 우선입니다.'], tip: '💡 HTML 기본 요소를 사용하면 별도의 키보드 이벤트 구현 없이 접근성이 기본 보장됩니다. div, span으로 버튼을 만들면 tabindex="0" 등 추가 구현이 필요합니다.' } },
+  { id: 12, principle: 2, category: '2.1.2. (초점 이동과 표시)', difficulty: 'mid', text: 'CSS에서 a:focus, button:focus { outline: none; }을 적용했을 때 발생하는 가장 심각한 접근성 문제는?', options: ['링크와 버튼의 기본 색상이 변경된다', '키보드 사용자가 현재 초점이 어느 요소에 있는지 시각적으로 확인할 수 없게 된다', '화면낭독프로그램이 링크를 인식하지 못한다', 'Tab 키의 이동 순서가 반대로 변경된다'], answer: 1, explanation: { correct: 'outline: none은 키보드 초점 표시 스타일을 제거하여, 키보드 사용자가 현재 어느 요소에 초점이 있는지 시각적으로 파악할 수 없게 됩니다. 이는 KWCAG 2.1.2. (초점 이동과 표시) 위반입니다.', wrongs: ['❌ outline 제거는 색상 변경과 무관합니다.', '✅ 초점 표시 제거가 핵심 문제입니다.', '❌ 화면낭독프로그램의 링크 인식은 outline과 무관합니다.', '❌ Tab 순서는 tabindex에 의해 결정되며 outline과 무관합니다.'], tip: '💡 초점 표시를 제거하거나 비활성화하지 않고, 기본 초점 스타일을 유지해야합니다.' } },
+  { id: 13, principle: 2, category: '2.1.3. (조작 가능)', difficulty: 'beginner', text: 'KWCAG 2.1.3에서 규정하는 모바일 웹에서의 컨트롤 최소 크기 기준은?', options: ['10px × 10px', '17px × 17px', '24px × 24px', '44px × 44px'], answer: 2, explanation: { correct: '모바일 환경에서 컨트롤의 최소 크기는 24px × 24px(대각선 6mm 이상)이어야 합니다. PC 환경에서는 17px × 17px 이상입니다 (검사항목 2.1.3. 조작 가능).', wrongs: ['❌ 10px × 10px는 너무 작아 기준에 미치지 못합니다.', '❌ 17px × 17px는 PC 환경 기준입니다.', '✅ 24px × 24px가 모바일 기준입니다.', '❌ 44px × 44px는 규정 기준이 아닙니다.'], tip: '💡 인접한 컨트롤 사이에도 최소 1px 이상의 여백을 두어야 합니다. 이 여백 영역에서는 위치 지정 도구(마우스, 터치)가 작동하지 않도록 구현합니다.' } },
+  { id: 14, principle: 2, category: '2.1.1. (키보드 사용 보장)', difficulty: 'advanced', text: '메인 내비게이션의 하위 메뉴가 마우스 hover 상태에서만 펼쳐지도록 구현되어 있습니다. 키보드 접근성을 보장하는 가장 적절한 개선 방법은?', options: ['하위 메뉴 항목에 tabindex="-1"을 추가한다', 'focus 이벤트 발생 시에도 동일하게 메뉴를 펼치도록 구현한다', '하위 메뉴를 별도 페이지로 분리하여 제공한다', '마우스 없이는 사용이 불가함을 안내 텍스트로 제공한다'], answer: 1, explanation: { correct: '모든 입력 방식에서 일관된 동작을 보장해야합니다. focus/blur 이벤트를 mouseover/mouseout과 함께 처리해야 합니다 (검사항목 2.1.1. 키보드 사용 보장).', wrongs: ['❌ tabindex="-1"은 Tab 탐색 순서에서 제외하는 것으로, 문제를 해결하지 못합니다.', '✅ :focus 추가 또는 JavaScript 이벤트 처리가 올바른 방법입니다.', '❌ 하위 메뉴를 별도 페이지로 분리하는 것은 구조적으로 적절하지 않습니다.', '❌ 접근 불가 안내는 접근성 문제를 해결하지 않습니다.'], tip: '💡 마우스 이벤트(mouseover, mouseout)와 키보드 이벤트(focus, blur)를 항상 쌍으로 구현하세요. hover 효과는 focus 상태에서도 동일하게 제공해야 합니다.' } },
+  { id: 15, principle: 2, category: '2.1.4. (문자 단축키)', difficulty: 'mid', text: '웹 서비스에서 단일 문자 단축키를 제공할 때, 오동작을 방지하는 방법으로 KWCAG 2.1.4에서 허용하지 않는 방식은?', options: ['문자 단축키 기능 자체를 끌 수 있는 설정을 제공한다', '문자 단축키를 Ctrl, Alt 등 수식키와 조합한 단축키로 재설정할 수 있게 한다', '모든 페이지 전 영역에서 항상 작동하는 문자 단축키만 제공한다', '특정 UI 영역에 초점을 맞춘 경우에만 단축키가 작동하도록 범위를 한정한다'], answer: 2, explanation: { correct: 'KWCAG 2.1.4. (문자 단축키)는 문자 단축키를 ①끄기 ②수식키와 조합으로 재설정 ③초점 범위 한정 중 하나 이상을 요구합니다. 항상 전체 영역에서 작동하는 방식은 음성 입력 사용자 등의 오동작을 유발합니다.', wrongs: ['❌ 끄기 설정 제공은 허용되는 방법입니다.', '❌ 수식키 조합 재설정도 허용되는 방법입니다.', '✅ 전체 영역에서 항상 작동하는 방식이 문제입니다.', '❌ 초점 범위 한정도 허용되는 방법입니다.'], tip: '💡 음성 입력 사용자가 "파일 저장"이라고 말할 때, 페이지에 "f", "파", "저" 같은 문자 단축키가 있다면 의도치 않게 실행될 수 있습니다. 이것이 2.1.4의 핵심 보호 대상입니다.' } },
+  { id: 16, principle: 2, category: '2.2.1. (응답시간 조절)', difficulty: 'mid', text: '인증번호 입력에 시간제한이 있는 경우, KWCAG 2.2.1을 준수하기 위해 반드시 제공해야 하는 기능은?', options: ['제한 시간을 화면에 카운트다운 형태로 표시하는 것으로 충분하다', '시간 만료 20초 전에 알리고 최소 10회 이상 연장할 수 있는 기능 및 해제 기능을 제공해야 한다', '제한 시간을 최소 5분 이상으로 설정해야 양호하다', '제한 시간 만료 후 자동 재시도가 이루어져야 한다'], answer: 1, explanation: { correct: 'KWCAG 2.2.1. (응답시간 조절)에 따라 시간제한이 있는 콘텐츠는 ①해제 가능 ②만료 20초 전 알림 후 스페이스바 같은 간단한 조작으로 10회 이상/기본 시간의 10배 이상 연장 가능 ③콘텐츠 시작 전 사전 안내 중 하나 이상을 제공해야 합니다.', wrongs: ['❌ 카운트다운 표시만으로는 부족합니다. 연장/해제 기능이 필요합니다.', '✅ 올바른 설명입니다.', '❌ 최소 시간 기준은 없고, 연장/해제 기능 제공이 요건입니다.', '❌ 자동 재시도는 요건이 아닙니다.'], tip: '💡 온라인 경매, 실시간 게임, 20시간 이상 세션은 예외이나, 이 경우에도 시간제한이 있음을 사전에 안내해야 합니다.' } },
+  { id: 17, principle: 2, category: '2.2.2. (정지 기능 제공)', difficulty: 'mid', text: '자동으로 변경되는 배너 슬라이드에 대해 KWCAG 2.2.2를 완전히 준수하기 위한 요건은?', options: ['슬라이드 전환 속도를 3초 이상으로 늦추면 충분하다', '마우스를 올리면(hover) 자동 전환이 멈추면 충분하다', '정지, 재생, 이전, 다음 버튼을 제공해야 한다', '슬라이드 수를 3개 이하로 제한하면 충분하다'], answer: 2, explanation: { correct: '자동 변경 콘텐츠는 정지, 재생, 이전, 다음 버튼을 제공해야 합니다. 또한 정지 상태에서 이전/다음 버튼을 눌러도 정지 상태가 유지되어야 하며, 키보드로도 모든 제어가 가능해야 합니다 (검사항목 2.2.2. 정지 기능 제공).', wrongs: ['❌ 속도 조절만으로는 충분하지 않습니다. 사용자 제어 기능이 필요합니다.', '❌ hover 정지는 마우스 사용자에게만 유효합니다. 키보드 사용자를 위한 제어 버튼이 필요합니다.', '✅ 올바른 설명입니다.', '❌ 슬라이드 수 제한은 요건이 아닙니다.'], tip: '💡 PC 환경에서는 이러한 키보드 제어 방식이 버튼 조작과 동일한 효과를 얻을 수 있지만, 모바일에서는 반드시 물리적인 버튼이 필요합니다.' } },
+  { id: 18, principle: 2, category: '2.3.1. (깜빡임과 번쩍임 사용 제한)', difficulty: 'beginner', text: 'KWCAG 2.3.1에서 광과민성 발작 예방을 위해 규정하는 깜빡임·번쩍임의 허용 기준은?', options: ['초당 1회 미만의 깜빡임만 허용한다', '깜박임이 불가피하다면, 화면의 10% 이내 면적이어야 한다', '모든 배경색이 흰색인 경우에만 적용된다', '화면 전체가 깜빡이지 않으면 위반이 아니다'], answer: 1, explanation: { correct: 'KWCAG 2.3.1. (깜빡임과 번쩍임 사용 제한)은 초당 3~50회 주기의 깜빡임/번쩍임 콘텐츠를 제공하지 않거나, 불가피 시 ①3초 미만 제한 ②화면의 10% 이내 면적 ③사전 안내 후 회피 가능 ④사전 정지 기능 중 하나 이상을 요구합니다.', wrongs: ['❌ 1회 미만 기준은 없습니다.', '✅ 올바른 설명입니다.', '❌ 배경색과 무관하게 적용됩니다.', '❌ 부분 영역의 깜빡임도 10% 초과 시 문제가 됩니다.'], tip: '💡 연구에 따르면 초당 20Hz 전후 깜빡임이 광과민성 발작 유발 가능성이 가장 높습니다.' } },
+  { id: 19, principle: 2, category: '2.4.1. (반복 영역 건너뛰기)', difficulty: 'mid', text: '"본문 바로가기" 건너뛰기 링크 구현 시 반드시 지켜야 할 사항이 아닌 것은?', options: ['<body> 요소 시작 직후 최상단에 배치해야 한다', '링크 클릭 시 화면 스크롤뿐 아니라 키보드 초점도 본문 영역으로 이동해야 한다', 'href 속성의 id 값이 실제 본문 시작 요소와 정확히 연결되어야 한다', '바로가기 링크가 많을수록 사용자가 원하는 정보를 더 빠르게 찾을 수 있다'], answer: 3, explanation: { correct: '건너뛰기 링크는 항상 시각적으로 보일 필요는 없습니다. 키보드 초점 시에만 표시되는 방식도 허용됩니다. 단, 실제로 작동해야 하며 기능적으로 유효해야 합니다 (검사항목 2.4.1. 반복 영역 건너뛰기).', wrongs: ['❌ body 최상단 배치는 반드시 지켜야 합니다.', '❌ 초점 이동은 필수 요건입니다. 화면만 스크롤되고 초점이 이동하지 않으면 키보드 사용자에게 무의미합니다.', '❌ href와 id가 정확히 연결되어야 합니다. 연결이 끊기면 기능하지 않습니다.', '✅ 오히려 너무 많은 건너뛰기 링크는 키보드 사용자에게 혼란을 줄 수 있다.'], tip: '💡 건너뛰기 링크는 단순히 제공만 하는 것이 아니라 실제로 작동해야 합니다.' } },
+  { id: 20, principle: 2, category: '2.4.2. (제목 제공)', difficulty: 'advanced', text: '포털 사이트에서 화면낭독프로그램 사용자가 "원하는 섹션으로 빠르게 이동하기 어렵다"는 민원이 접수되었습니다. 가장 효과적인 개선 방법은?', options: ['모든 텍스트 크기를 전체적으로 키운다', '각 콘텐츠 블록에 h1~h6 요소로 적절한 계층 구조의 제목을 제공한다', '페이지의 전체 콘텐츠 블록 수를 절반으로 줄인다', '모든 링크 텍스트를 굵게(bold) 표시한다'], answer: 1, explanation: { correct: 'h1~h6 제목 요소를 통해 콘텐츠 블록 구조를 명확히 하면, 화면낭독프로그램 사용자가 제목 탐색 단축키(예: H 키)를 통해 원하는 섹션으로 빠르게 이동할 수 있습니다 (검사항목 2.4.2. 제목 제공).', wrongs: ['❌ 텍스트 크기는 탐색 속도와 무관합니다.', '✅ 제목 구조 제공이 핵심 해결책입니다.', '❌ 콘텐츠 수를 줄이는 것은 근본 해결책이 아닙니다.', '❌ 굵게 표시는 탐색 기능과 무관합니다.'], tip: '💡 화면낭독프로그램은 제목 요소(h1~h6) 단위로 페이지를 탐색하는 기능을 제공합니다. h 단계를 건너뛰지 않고(h1→h2→h3) 논리적 계층으로 제공하세요.' } },
+  { id: 21, principle: 3, category: '3.1.1. (기본 언어 표시)', difficulty: 'beginner', text: '한국어로 작성된 웹 페이지에서 주요 언어를 명시하는 가장 올바른 방법은?', options: ['<html lang="kor">', '<html lang="ko">', '<meta charset="ko">', '<meta name="language" content="Korean">'], answer: 1, explanation: { correct: 'KWCAG 3.1.1. (기본 언어 표시)에 따라 html 요소의 lang 속성으로 BCP 47 형식의 언어 코드를 제공해야 합니다. 한국어는 "ko"를 사용합니다.', wrongs: ['❌ "kor"는 ISO 639-2 코드입니다. HTML lang 속성에는 "ko"를 사용해야 합니다.', '✅ "ko"가 올바른 언어 코드입니다.', '❌ charset은 문자 인코딩이지 언어 설정이 아닙니다.', '❌ meta name="language"는 표준 방식이 아니며 보조 기술이 인식하지 않습니다.'], tip: '💡 lang 속성은 화면낭독프로그램이 올바른 언어로 발음하도록 도와줍니다.' } },
+  { id: 22, principle: 3, category: '3.2.1. (사용자 요구에 따른 실행)', difficulty: 'mid', text: '입력 서식에 키보드 초점이 이동하는 것만으로 새 창이 자동으로 열리는 경우, 위반되는 접근성 검사항목은?', options: ['1.1.1. (적절한 대체 텍스트 제공)', '2.1.1. (키보드 사용 보장)', '3.2.1. (사용자 요구에 따른 실행)', '4.1.1. (마크업 오류 방지)'], answer: 2, explanation: { correct: 'KWCAG 3.2.1. (사용자 요구에 따른 실행)에 따라 UI 컴포넌트가 초점을 받는 것만으로(클릭/실행 없이) 맥락의 변화(새 창 열기, 페이지 이동 등)가 발생하면 안 됩니다. 사용자가 예측할 수 없는 변화를 초래합니다.', wrongs: ['❌ 1.1.1은 이미지 대체 텍스트와 관련된 검사항목입니다.', '❌ 2.1.1은 키보드 자체로 기능을 사용할 수 있는지에 관한 것입니다.', '✅ 3.2.1. (사용자 요구에 따른 실행) 위반입니다.', '❌ 4.1.1은 HTML 문법 준수와 관련됩니다.'], tip: '💡 초점을 받는 것만으로 콘텐츠가 변경되거나 새 창이 열리는 것은 금지입니다. 사용자 요청(클릭, Enter)에 의해서만 맥락 변화가 발생해야 합니다.' } },
+  { id: 23, principle: 3, category: '3.3.2. (레이블 제공)', difficulty: 'mid', text: '회원가입 폼에서 이메일 입력란에 label이 없고 placeholder="이메일을 입력하세요"만 있습니다. 이 경우 발생하는 접근성 문제는?', options: ['이메일 형식 유효성 검사가 작동하지 않는다', '사용자의 입력 후 placeholder가 사라져 사용자가 목적을 잊기 쉽다', '이메일 입력란이 화면에 표시되지 않는다', 'placeholder 텍스트가 자동 완성을 막는다'], answer: 1, explanation: { correct: 'placeholder는 label을 대체할 수 없습니다. 화면낭독프로그램이 일부 환경에서 입력란 용도를 올바르게 전달하지 못하고, 입력 후 placeholder가 사라져 인지 장애 사용자가 목적을 잊기 쉽습니다 (검사항목 3.3.2. 레이블 제공).', wrongs: ['❌ 유효성 검사는 label 유무와 무관합니다.', '✅ 올바른 설명입니다.', '❌ label 유무는 화면 표시와 무관합니다.', '❌ placeholder는 자동 완성과 관련 없습니다.'], tip: '💡placeholder는 추가 힌트 용도로만 사용하고 레이블 역할을 시키지 마세요.' } },
+  { id: 24, principle: 3, category: '3.2.1. (사용자 요구에 따른 실행)', difficulty: 'beginner', text: '콤보박스(드롭다운)에서 항목을 선택하는 즉시 자동으로 페이지가 이동하는 경우, 가장 올바른 개선 방법은?', options: ['콤보박스를 라디오 버튼 그룹으로 전면 교체한다', '선택 후 별도 "이동" 또는 "적용" 버튼을 제공하여 사용자가 명시적으로 실행하도록 한다', '페이지 이동 전 500ms 지연을 추가한다', '페이지 이동 전 JavaScript confirm() 확인창을 표시한다'], answer: 1, explanation: { correct: 'KWCAG 3.2.1. (사용자 요구에 따른 실행)에 따라 사용자 입력(선택)에 의해 자동으로 맥락 변화가 발생해서는 안 됩니다. 명시적인 실행 버튼을 통해 사용자가 직접 실행하도록 설계해야 합니다.', wrongs: ['❌ 라디오 버튼으로 교체는 근본 해결책이 아닙니다.', '✅ 명시적 실행 버튼 제공이 올바른 해결책입니다.', '❌ 지연 추가는 임시방편으로 접근성을 보장하지 않습니다.', '❌ confirm() 창은 불필요한 단계를 추가하고 접근성 문제가 있을 수 있습니다.'], tip: '💡 드롭다운 선택만으로 페이지가 이동하면 키보드 사용자나 보조기기 사용자에게 예측하지 못한 맥락 변화가 발생할 수 있습니다. 별도의 실행 버튼을 제공하는 방식이 권장됩니다.' } },
+  { id: 25, principle: 3, category: '3.3.1. (오류 정정)', difficulty: 'mid', text: '웹 폼에서 필수 입력란을 빨간색 테두리로만 표시하고, 오류 메시지를 display:none으로 숨긴 경우 동시에 위반되는 검사항목은?', options: ['1.4.1. (색에 무관한 콘텐츠 인식)과 3.3.2. (레이블 제공)', '1.4.1. (색에 무관한 콘텐츠 인식)과 3.3.1. (오류 정정)', '2.1.1. (키보드 사용 보장)과 4.1.1. (마크업 오류 방지)', '1.1.1. (적절한 대체 텍스트 제공)과 2.4.2. (제목 제공)'], answer: 1, explanation: { correct: '① 빨간색 테두리만으로 오류를 표시하는 것은 색에 의존하는 방식으로 색에 무관한 콘텐츠 인식 위반 ② display:none으로 오류 메시지를 숨기면 보조 기술이 인식하지 못해 오류 정정 위반입니다.', wrongs: ['❌ 3.3.2. (레이블 제공)은 레이블 자체의 존재 여부에 관한 것입니다.', '✅ 올바른 복합 위반 설명입니다.', '❌ 키보드 접근성, 마크업 오류와는 직접 관련이 없습니다.', '❌ 대체 텍스트, 제목 제공과는 직접 관련이 없습니다.'], tip: '💡 오류 표시는 색상 + 아이콘 + 텍스트를 병행하세요. 입력 오류 시 제공되는 오류 메시지는 문제의 원인을 명확히 설명해야 합니다.' } },
+  { id: 26, principle: 3, category: '3.3.1. (오류 정정)', difficulty: 'advanced', text: '온라인 결제 페이지에서 카드 번호 입력 오류 시, KWCAG 3.3.1. (오류 정정)을 완전히 준수하는 오류 처리 방법은?', options: ['화면 상단에 "입력 오류가 발생했습니다"라는 일반 메시지만 표시한다', '잘못된 입력란을 3px 이상의 빨간색 테두리로 강조하여 사용자가 오류 위치를 쉽게 인지하도록 한다', '어떤 항목의 어떤 오류인지 구체적으로 설명하는 텍스트를 aria-live 영역 등을 통해 보조 기술에도 전달하고 수정 방법을 안내한다', '오류 발생 시 페이지를 새로고침하고 처음부터 다시 입력하도록 한다'], answer: 2, explanation: { correct: 'KWCAG 3.3.1. (오류 정정)은 ① 오류 항목 식별(어떤 항목인지) ② 오류 설명(어떤 문제인지) ③ 수정 제안(어떻게 수정하는지)을 요구합니다. aria-live 영역으로 화면낭독프로그램에도 즉시 전달해야 합니다.', wrongs: ['❌ 일반 메시지만으로는 사용자가 어떤 항목을 수정해야 할지 알 수 없습니다.', '❌ 빨간색만으로만 표현하는 것은 1.4.1. (색에 무관한 콘텐츠 인식)을 위반합니다.', '✅ 올바른 완전한 오류 처리 방법입니다.', '❌ 새로고침은 입력 내용을 잃게 하여 더 큰 불편을 초래합니다.'], tip: '💡 오류 발생 시 초점을 오류 메시지나 오류 항목으로 이동시켜서, 사용자가 문제를 확인하고 해결할 수 있도록 도와야한다.' } },
+  { id: 27, principle: 3, category: '3.1.1. (기본 언어 표시)', difficulty: 'mid', text: '한국어 페이지 본문에 영단어 "Accessibility"가 포함된 경우, 화면낭독프로그램이 올바르게 읽도록 처리하는 방법은?', options: ['HTML 문서의 기본 언어가 한국어이므로 별도의 언어 지정 없이 그대로 작성한다', '<span lang="en">Accessibility</span>로 마크업한다', '발음 오류를 방지하기 위해 해당 단어에 aria-label="액세서빌리티"를 추가한다', '영문 단어 앞에 항상 한국어 번역을 병기한다'], answer: 1, explanation: { correct: '본문 언어와 다른 언어의 구절은 lang 속성으로 해당 언어를 명시해야 화면낭독프로그램이 올바른 발음·억양으로 읽을 수 있습니다. (검사항목 3.1.1. 기본 언어 표시).', wrongs: ['❌ 별도 처리 없이 두면 한국어 TTS 엔진이 영문을 한국어 방식으로 읽을 수 있습니다.', '✅ 본문과 다른 언어의 단어에는 lang 속성으로 언어를 명시해야합니다.', '❌ aria-label로 발음을 강제로 지정하는 것은 올바른 방법이 아닙니다. 언어 정보는 lang 속성으로 제공해야 보조 기술이 적절한 발음 규칙을 적용할 수 있습니다.', '❌ 번역 병기는 도움이 될 수 있으나, 언어 마크업이 더 중요합니다.'], tip: '💡 화면낭독프로그램은 lang 속성에 따라 적합한 TTS 엔진과 발음 규칙을 선택합니다. 외국어 구절에 lang을 누락하면 잘못된 발음으로 읽혀 이해가 어려울 수 있습니다.' } },
+  { id: 28, principle: 3, category: '3.2.3. (일관된 내비게이션)', difficulty: 'beginner', text: '웹사이트의 여러 페이지에서 내비게이션 메뉴 순서가 페이지마다 다르게 제공되는 경우, 위반되는 접근성 원칙은?', options: ['1.3.2. (콘텐츠의 선형구조)', '2.4.1. (반복 영역 건너뛰기)', '3.2.3. (일관된 내비게이션)', '4.1.1. (마크업 오류 방지)'], answer: 2, explanation: { correct: 'KWCAG 3.2.3. (일관된 내비게이션)에 따라, 여러 페이지에 반복 등장하는 내비게이션은 일관된 순서로 제공되어야 합니다. 순서가 변경되면 사용자가 혼란을 겪습니다.', wrongs: ['❌ 1.3.2는 단일 페이지 내 콘텐츠의 선형 순서에 관한 것입니다.', '❌ 2.4.1은 건너뛰기 링크 제공에 관한 것입니다.', '✅ 3.2.3. (일관된 내비게이션) 위반입니다.', '❌ 4.1.1은 HTML 문법 준수에 관한 것입니다.'], tip: '💡 내비게이션 일관성은 특히 화면낭독프로그램 사용자와 인지 장애 사용자에게 중요합니다. 동일한 기능은 동일한 위치와 레이블로 제공하세요.' } },
+  { id: 29, principle: 3, category: '3.2.1. (사용자 요구에 따른 실행)', difficulty: 'mid', text: '상품 목록 필터에서 체크박스를 선택하는 즉시 페이지 상단으로 스크롤되고 결과가 갱신됩니다. 이 상황의 접근성 문제와 올바른 개선책은?', options: ['필터 선택 시 결과 영역에 aria-live를 적용하여 변경된 내용을 보조 기술에 전달한다', '사용자가 예측하지 못한 맥락 변화가 발생하므로, "필터 적용" 버튼을 통해 사용자가 명시적으로 실행하도록 해야 한다', '필터 선택 후 포커스를 결과 영역으로 자동 이동시켜 변경된 내용을 바로 확인할 수 있게 한다', '페이지 상단 스크롤 애니메이션을 부드럽게(smooth) 해야 한다'], answer: 1, explanation: { correct: 'KWCAG 3.2.1. (사용자 요구에 따른 실행)에 따라 사용자 입력(체크박스 선택)으로 자동으로 페이지 맥락이 변경(스크롤, 결과 갱신)되어서는 안 됩니다. 명시적인 "필터 적용" 버튼을 제공해야 합니다.', wrongs: ['❌ aria-live는 변경 알림 기능일 뿐, 자동 실행 문제는 해결하지 못합니다.', '✅ 명시적 실행 버튼 제공이 올바른 해결책입니다.', '❌ 포커스 자동 이동도 또 다른 맥락 변화를 발생시킨다.', '❌ 스크롤 애니메이션은 부가적 사항입니다.'], tip: '💡 키보드로 체크박스 사이를 이동할 때마다 페이지가 갱신되면, 화면낭독프로그램 사용자는 자신이 어디 있는지 파악하기 어렵습니다. 사용자가 선택을 완료한 후 명시적으로 적용하도록 설계하세요.' } },
+  { id: 30, principle: 3, category: '3.3.3. (접근 가능한 인증)', difficulty: 'advanced', text: '회원 로그인 과정에서 사용자가 아이디와 비밀번호를 입력한 후, 왜곡된 문자 CAPTCHA를 보고 입력해야만 로그인이 완료되도록 설계되어 있다. 또한 보안을 이유로 비밀번호 입력란에서 붙여넣기 기능이 차단되어 있다. 이 상황을 KWCAG 3.3.3. (접근 가능한 인증) 기준에 맞게 개선한 방법으로 가장 적절한 것은 무엇인가?', options: ['CAPTCHA 대신 음성 CAPTCHA를 추가하여 시각 장애인을 위한 대체 수단을 제공한다.', '비밀번호 붙여넣기 차단을 유지하되, 비밀번호 길이를 6자리 이하로 제한하여 입력 부담을 줄인다.', 'CAPTCHA를 유지하되 보안을 위해 문자 왜곡 정도를 줄이고 글자 크기를 크게 표시한다.', '비밀번호 자동완성 및 붙여넣기를 허용하고, 이메일 인증 링크나 생체 인증 등 대체 인증 수단을 추가 제공한다.'], answer: 3, explanation: { correct: 'KWCAG 3.3.3. (접근 가능한 인증)은 인증 과정이 CAPTCHA, 복잡한 문자 입력, 기억 테스트 등 인지 기능 테스트에만 의존하지 않도록 요구합니다. 또한 비밀번호 관리 프로그램이나 브라우저 자동완성을 사용할 수 있도록 붙여넣기 차단을 하지 않는 것이 중요합니다. 이메일 인증 링크, 생체 인증, 패스키 등 인지 부담이 적은 대체 인증 방법을 제공하는 것이 바람직합니다. (검사항목 3.3.3).', wrongs: ['❌ 음성 CAPTCHA도 내용을 듣고 기억하여 입력해야 하므로 여전히 인지 기능 테스트에 의존하는 방식입니다.', '❌ 비밀번호 길이를 줄여도 붙여넣기 차단은 인지 부담을 증가시키므로 접근성 문제를 해결하지 못하는 방법입니다.', '❌ 문자 왜곡을 줄이더라도 CAPTCHA 자체가 인지 기능 테스트이므로 근본적인 해결 방법이 아닙니다.', '✅ 자동완성·붙여넣기 허용과 대체 인증 수단 제공은 인지 부담을 줄이는 올바른 접근 가능한 인증 방법입니다.'], tip: '💡 비밀번호 자동완성, 붙여넣기 허용, 생체 인증, 이메일 인증 링크 등 인지 부담이 적은 다양한 인증 방법을 제공하세요.' } },
+  { id: 31, principle: 4, category: '4.1.1. (마크업 오류 방지)', difficulty: 'beginner', text: 'KWCAG 4.1.1. (마크업 오류 방지)에서 요구하는 사항이 아닌 것은?', options: ['시작 태그와 종료 태그를 올바르게 사용한다', '요소 중첩을 올바르게 한다', '동일한 id 속성값을 여러 요소에 중복 사용하지 않는다', '하나의 요소에서 여러 개의 style 속성을 선언하여 스타일을 개별적으로 관리한다'], answer: 3, explanation: { correct: 'KWCAG 4.1.1. (마크업 오류 방지)은 마크업 오류(태그 누락, 잘못된 중첩, id 중복, 속성 중복)를 방지하는 것이 목적입니다. ARIA role 속성의 모든 요소 필수 명시는 해당 요건이 아닙니다.', wrongs: ['❌ 태그 올바른 사용은 4.1.1의 요건입니다.', '❌ 올바른 중첩은 4.1.1의 요건입니다.', '❌ id 고유성은 4.1.1의 요건입니다.', '✅ 동일 요소에 style 속성을 중복 선언하면 브라우저 해석이 달라질 수 있으므로 마크업 오류 방지 원칙에 맞지 않는 방법입니다.'], tip: '💡 HTML 마크업에서는 태그의 시작·종료, 올바른 중첩 구조, 고유한 id 사용, 속성 중복 여부를 항상 확인하세요.' } },
+  { id: 32, principle: 4, category: '4.1.1. (마크업 오류 방지)', difficulty: 'mid', text: '동일한 페이지에서 같은 id 값을 가진 요소가 두 개 존재할 경우 발생할 수 있는 주요 접근성 문제는?', options: ['label이 어떤 입력 요소와 연결되는지 명확하지 않아 사용자에게 혼란을 줄 수 있다', '특정 요소를 id로 찾을 때 어떤 요소를 의미하는지 구분하기 어려워질 수 있다', 'JavaScript가 전혀 실행되지 않는다', '두 요소가 화면에서 겹쳐 표시된다'], answer: 0, explanation: { correct: 'HTML에서 id 속성은 문서 내에서 고유하게 사용되어야 하는 값입니다. 동일한 id가 여러 요소에 사용되면 label과 입력 요소의 연결이 모호해질 수 있어 사용자가 어떤 입력 필드인지 정확히 이해하기 어려워질 수 있습니다 (검사항목 4.1.1. 마크업 오류 방지).', wrongs: ['✅ id가 중복되면 label이 어떤 입력 요소를 가리키는지 모호해질 수 있습니다.', '❌ id 중복 시 요소 식별이 어려워질 수 있지만 접근성의 핵심 문제로 묻는 상황에서는 정답이 아닙니다.', '❌ id 중복이 JavaScript 전체 실행을 막지는 않습니다.', '❌ id 중복은 화면 표시에 영향을 주지 않습니다.'], tip: '💡 id 속성은 한 페이지에서 중복되지 않도록 고유하게 작성하세요.' } },
+  { id: 33, principle: 4, category: '4.2.1. (웹 애플리케이션 접근성 준수)', difficulty: 'mid', text: '다음 중 WAI-ARIA 사용 원칙에 대한 설명으로 가장 올바른 것은?', options: ['보통 기본 HTML 요소보다 ARIA 속성을 사용하는 것이 더 좋은 접근성 방법이다', '보조 기술이 인식하도록 하기 위해 모든 인터랙션 요소에 aria-hidden="true"를 추가해야 한다', '기본 HTML 요소로 충분한 기능을 제공할 수 있다면 WAI-ARIA를 사용하지 않는 것이 바람직하다', 'WAI-ARIA는 시각적인 디자인과 스타일을 변경하기 위해 사용하는 기술이다'], answer: 2, explanation: { correct: 'WAI-ARIA는 접근성을 보완하기 위한 기술이지만 기본 HTML 요소로 충분한 의미와 기능을 제공할 수 있다면 ARIA를 사용하지 않는 것이 권장됩니다. 즉 "나쁜 ARIA보다 ARIA가 없는 것이 낫다"는 원칙에 해당합니다.', wrongs: ['❌ ARIA는 기본 HTML 기능을 대체하는 것이 아니라 보완하기 위한 기술입니다.', '❌ aria-hidden="true"는 요소를 보조 기술에서 숨기는 속성이므로 인터랙션 요소에 사용하면 접근성이 저하됩니다.', '✅ 기본 HTML 요소가 의미와 기능을 이미 제공한다면 추가적인 ARIA 사용은 필요하지 않습니다.', '❌ WAI-ARIA는 시각적 스타일을 변경하는 기술이 아니라 보조 기술에 정보를 제공하기 위한 기술입니다.'], tip: '💡 가능하면 기본 HTML 요소(button, a, input 등)를 먼저 사용하세요. ARIA는 기본 HTML로 해결할 수 없는 경우에만 보완적으로 사용하세요..' } },
+  { id: 34, principle: 4, category: '4.2.1. (웹 애플리케이션 접근성 준수)', difficulty: 'advanced', text: '웹 접근성을 고려하여 커스텀 탭(Tab) 인터페이스를 구현하려고 합니다. WAI-ARIA 역할(Role)과 상태(State) 속성을 가장 올바르게 적용한 것은?', options: ['탭 메뉴를 감싸는 컨테이너에 role="tablist", 각 탭 버튼에 role="tab", 탭 내용 영역에 role="tabpanel"을 부여하고, 선택된 탭은 aria-selected="true"로 명시한다.', '모든 탭 버튼에 aria-expanded="true"를 적용하여 펼쳐진 상태임을 알리고, 탭 내용 영역은 aria-hidden="false"로 설정한다.', '탭 버튼에는 role="button"을 사용하고, 활성화된 탭에만 CSS 클래스 .active를 부여하면 보조 기술이 자동으로 인식한다.', '탭 메뉴 컨테이너에 role="navigation"을 부여한다.'], answer: 0, explanation: { correct: '커스텀 탭 UI는 role="tablist", role="tab", role="tabpanel"을 사용하여 구조를 명확히 하고, 현재 선택된 탭은 aria-selected="true"로 상태를 전달해야 보조 기술 사용자가 탭의 구조와 현재 상태를 정확히 인지할 수 있습니다 (검사항목 4.2.1. 웹 애플리케이션 접근성 준수).', wrongs: ['✅ 올바른 ARIA 역할 및 상태 적용입니다.', '❌ aria-expanded는 드롭다운 메뉴처럼 접히고 펼쳐지는 요소에 사용하며, 탭 UI의 선택 상태는 aria-selected를 사용해야 합니다.', '❌ CSS 클래스만으로는 보조 기술에 상태 변화가 전달되지 않습니다. 반드시 ARIA 속성을 통해 상태 정보를 제공해야 합니다.', '❌ role="navigation"은 전체 페이지의 주요 탐색 영역에 사용되며, 탭 간의 논리적 관계를 설명하지 못합니다.'], tip: '💡 탭을 구현할 때는 올바른 ARIA 역할(role) 부여와 함께, 키보드 이벤트 처리를 구현해야 완벽한 접근성을 제공할 수 있습니다.' } },
+  { id: 35, principle: 4, category: '4.2.1. (웹 애플리케이션 접근성 준수)', difficulty: 'mid', text: '장바구니 담기 버튼이 img 요소에 onclick 이벤트로 구현되어 있습니다. 이 구현의 접근성 문제와 최선의 해결 방법은?', options: ['문제없다 — onclick은 마우스와 키보드 모두에서 작동하기 때문이다', 'img 요소는 기본 키보드 초점을 받지 못하므로, button 요소로 교체하거나 tabindex="0" + role="button" + keydown 이벤트를 추가해야 한다', 'img 요소에 aria-hidden="true"를 추가하면 접근성 문제가 해결된다', 'onclick 이벤트를 onmousedown으로 변경하면 해결된다'], answer: 1, explanation: { correct: 'img 요소는 기본적으로 키보드 초점을 받지 못합니다. button 요소로 교체하는 것이 가장 좋고, 불가피하면 tabindex="0" + role="button" + Enter/Space keydown 이벤트를 추가해야 합니다 (검사항목 4.2.1, 2.1.1).', wrongs: ['❌ onclick은 마우스와 Enter/Space 키를 지원하지만, img 요소 자체가 Tab 탐색 불가능합니다.', '✅ 올바른 설명입니다.', '❌ aria-hidden="true"는 오히려 보조 기술에서 해당 요소를 숨겨 사용 불가능하게 합니다.', '❌ onmousedown은 키보드 접근성 문제를 해결하지 않습니다.'], tip: '💡 button 요소를 사용하면 Enter 키, Space 키, Tab 탐색, role="button" 알림이 모두 자동으로 제공됩니다. HTML 기본 요소를 최대한 활용하세요.' } },
+  { id: 36, principle: 4, category: '4.2.1. (웹 애플리케이션 접근성 준수)', difficulty: 'advanced', text: '상품 상세 페이지에서 옵션 선택 기능이 다음과 같이 구현되어 있습니다.\n옵션 목록이 ul 요소와 a 요소로 구성되어 있으며, 클릭 이벤트로 옵션을 선택하도록 되어 있습니다.\n이 구현에서 발생할 수 있는 접근성 문제와 가장 적절한 해결 방법은?', options: ['옵션 선택 기능은 select 요소로 구현하는 것이 가장 적절하며, 사용자 정의 컴포넌트를 사용할 경우 role="listbox"와 role="option" 등을 제공하고 키보드 탐색과 aria-expanded 상태 정보를 구현해야 한다', 'ul과 li 구조를 사용하고 있으므로 보조 기술은 이를 자동으로 콤보박스로 인식하므로 별도의 접근성 처리가 필요 없다', '각 옵션에 title 속성을 추가하면 보조 기술이 옵션 선택 컴포넌트로 인식할 수 있다', '옵션 목록에 tabindex="0"을 추가하면 콤보박스와 동일한 접근성을 제공할 수 있다'], answer: 0, explanation: { correct: '옵션 선택 기능은 기본적으로 select 요소로 구현하는 것이 가장 적절하며, 커스텀 컴포넌트를 사용할 경우 role="listbox", role="option" 등의 ARIA 역할과 aria-expanded 상태 정보, 방향키·Enter·Space 키 등의 키보드 탐색 기능을 제공해야 합니다. (검사항목 4.2.1. 웹 애플리케이션 접근성 준수).', wrongs: ['✅ 콤보박스 기능은 select 요소를 사용하는 것이 가장 적절하며, 커스텀 구현 시에는 role="listbox", role="option", aria-expanded 등의 ARIA 속성과 키보드 탐색을 제공해야 합니다.', '❌ ul과 li는 단순 목록 구조이므로 보조 기술에서는 선택 가능한 콤보박스로 인식되지 않습니다.', '❌ title 속성은 추가 설명을 제공할 뿐이며 컴포넌트의 역할이나 선택 기능을 전달하지 못합니다.', '❌ tabindex는 초점 이동만 가능하게 할 뿐 콤보박스 역할, 상태, 선택 기능을 제공하지 못합니다.'], tip: '💡 가능하면 select와 같은 HTML 기본 폼 요소를 우선 사용하세요.' } },
+  { id: 37, principle: 4, category: '4.1.1. (마크업 오류 방지)', difficulty: 'mid', text: '다음 중 HTML 요소의 열고 닫는 태그 작성과 중첩 순서에 대한 설명으로 가장 적절한 것은?', options: ['HTML 요소는 열고 닫는 태그를 함께 작성해야 하며, 중첩 구조에서는 먼저 열린 요소가 나중에 닫히도록 작성해야 한다', 'HTML 요소는 열고 닫는 태그의 순서가 일부 달라도 브라우저가 자동으로 수정하므로 접근성에 큰 영향을 주지 않는다', '요소의 닫는 태그가 누락되더라도 화면 표시가 정상이라면 콘텐츠 의미 전달에는 문제가 없다', '요소의 중첩 순서는 화면 디자인에만 영향을 주며 보조 기술의 콘텐츠 해석에는 영향을 주지 않는다'], answer: 0, explanation: { correct: 'HTML 요소는 <tag></tag> 형태로 열고 닫는 태그가 정확히 작성되어야 하며, 중첩 구조에서는 먼저 열린 요소가 나중에 닫히는 순서를 유지해야 합니다 (검사항목 4.1.1. 마크업 오류 방지).', wrongs: ['✅ HTML 요소는 열고 닫는 태그가 정확히 작성되어야 하며, 중첩 구조에서는 먼저 열린 요소가 나중에 닫혀야 합니다.', '❌ 일부 브라우저는 자동 보정하지만 브라우저와 보조 기술이 다르게 해석할 수 있습니다.', '❌ 닫는 태그가 누락되면 콘텐츠 구조나 의미가 왜곡될 수 있습니다.', '❌ 잘못된 중첩 구조는 보조 기술이 콘텐츠 구조를 잘못 인식하게 할 수 있습니다.'], tip: '💡 HTML 태그는 반드시 열고 닫는 구조와 중첩 순서를 정확히 작성하세요.' } },
+  { id: 38, principle: 4, category: '4.1.1. (마크업 오류 방지)', difficulty: 'beginner', text: 'HTML5에서 제거(deprecated)되어 더 이상 사용해서는 안 되는 속성은?', options: ['aria-label', 'aria-describedby', 'longdesc', 'tabindex'], answer: 2, explanation: { correct: 'longdesc 속성은 HTML5에서 제거되었습니다. DOCTYPE이 HTML5인 경우 사용할 수 없으며, 대신 aria-describedby, figure/figcaption, 또는 근처 텍스트 설명을 사용해야 합니다 (검사항목 4.1.1. 마크업 오류 방지).', wrongs: ['❌ aria-label은 WAI-ARIA 사양의 현행 속성입니다.', '❌  aria-describedby은WAI-ARIA 사양의 현행 속성입니다.', '✅ longdesc는 HTML5에서 제거되었습니다.', '❌ tabindex는 현재도 유효한 HTML 속성입니다.'], tip: '💡 긴 설명이 필요한 이미지에는 ① aria-describedby로 설명 텍스트 연결 ② <figure>와 <figcaption> 사용 ③ 근처에 직접 텍스트 설명 제공 방법을 사용하세요.' } },
+  { id: 39, principle: 4, category: '4.2.1. (웹 애플리케이션 접근성 준수)', difficulty: 'advanced', text: '모달 팝업 접근성 구현 시 잘못된 요건은?', options: ['role="dialog"와 aria-modal="true"를 추가한다', '팝업이 열리면 초점이 팝업 내부 첫 번째 상호작용 요소로 이동해야 한다', '팝업이 열려 있는 동안 Tab 키로 배경 콘텐츠에도 자유롭게 접근할 수 있어야 한다', '팝업이 닫히면 팝업을 열었던 버튼으로 초점이 복귀해야 한다'], answer: 2, explanation: { correct: '모달 팝업 활성화 시 초점은 팝업 내부에서만 순환해야 합니다(Focus Trap). 배경 콘텐츠로 초점이 이동하면 사용자가 팝업을 닫지 않고 배경을 조작할 수 있어 혼란을 야기합니다 (검사항목 4.2.1. 웹 애플리케이션 접근성 준수).', wrongs: ['❌ role="dialog"와 aria-modal="true"는 필수 요건입니다.', '❌ 팝업 내 첫 요소로 초점 이동은 필수 요건입니다.', '✅ 배경 콘텐츠 자유 접근은 허용되어서는 안 됩니다.', '❌ 팝업 닫힌 후 원위치 초점 복귀는 필수 요건입니다.'], tip: '💡 모달 내 마지막 요소에서 Tab 시 첫 요소로, 첫 요소에서 Shift+Tab 시 마지막 요소로 순환하도록 JavaScript로 구현하세요. 배경에는 aria-hidden="true"를 적용합니다.' } },
+  { id: 40, principle: 4, category: '4.2.1. (웹 애플리케이션 접근성 준수)', difficulty: 'mid', text: '좌석 선택 페이지에서 선택/미선택/매진 상태를 색상만으로 구분하고 각 좌석 버튼에 aria-hidden="true"가 적용되어 있습니다. 이 상황이 위반하는 접근성 검사항목을 모두 고른 것은?', options: ['1.4.1. (색에 무관한 콘텐츠 인식) 위반만 해당된다', '4.2.1. (웹 애플리케이션 접근성 준수) 위반만 해당된다', '1.4.1. (색에 무관한 콘텐츠 인식)과 4.2.1. (웹 애플리케이션 접근성 준수) 모두 위반된다', '2.1.1. (키보드 사용 보장) 위반만 해당된다'], answer: 2, explanation: { correct: '① 색상만으로 좌석 상태 구분 → 1.4.1. (색에 무관한 콘텐츠 인식) 위반 ② 상호작용 버튼에 aria-hidden="true" 적용 → 보조 기술에서 버튼이 완전히 숨겨져 사용 불가 + 상태 정보 미전달 → 4.2.1. (웹 애플리케이션 접근성 준수) 위반. 이 두 가지가 동시에 위반됩니다.', wrongs: ['❌ 1.4.1만이 아닌 4.2.1도 위반됩니다.', '❌ 4.2.1만이 아닌 1.4.1도 위반됩니다.', '✅ 두 가지 모두 위반됩니다.', '❌ 2.1.1 위반도 있을 수 있으나, 이 상황의 핵심은 1.4.1과 4.2.1입니다.'], tip: '💡 좌석 상태 표현: aria-pressed(선택/미선택), aria-disabled(매진) 속성으로 상태를 전달하고, 색상 외에 텍스트나 아이콘을 병행하세요. 상호작용 요소에 aria-hidden을 절대 사용하지 마세요.' } }
+];
+
+/* ===========================
+   LocalStorage Leaderboard
+   =========================== */
+const LB_KEY = 'quiz_leaderboard_v1';
+
+function loadLeaderboard() {
+  try {
+    return JSON.parse(localStorage.getItem(LB_KEY) || '[]');
+  } catch(e) { return []; }
+}
+
+function saveLeaderboard(entries) {
+  try { localStorage.setItem(LB_KEY, JSON.stringify(entries)); } catch(e) {}
+}
+
+function addLeaderboardEntry(name, score, total, startTime, endTime) {
+  const entries = loadLeaderboard();
+  entries.unshift({
+    name: name,
+    score: score,
+    total: total,
+    pct: Math.round(score / total * 100),
+    timestamp: Date.now(),
+    date: endTime ? new Date(endTime).toLocaleString('ko-KR') : new Date().toLocaleString('ko-KR')
+  });
+  entries.sort((a, b) => b.score - a.score || b.timestamp - a.timestamp);
+  saveLeaderboard(entries);
+}
+
+function clearLeaderboard() {
+  if (!confirm('모든 결과 기록을 초기화할까요?')) return;
+  localStorage.removeItem(LB_KEY);
+  renderLeaderboard();
+  showToast('기록이 초기화되었습니다.');
+}
+
+function renderLeaderboard() {
+  const entries = loadLeaderboard();
+  const tbody = document.getElementById('lb-tbody');
+  const countEl = document.getElementById('lb-count');
+
+  countEl.textContent = `총 ${entries.length}개 기록`;
+
+  if (entries.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="4"><div class="lb-empty"><span class="lb-empty-icon">📋</span>아직 완료된 퀴즈 기록이 없습니다.<br><small style="color:var(--text-muted);margin-top:6px;display:block;">퀴즈를 완료하면 여기에 결과가 저장됩니다.</small></div></td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = entries.map((entry, i) => {
+    const rank = i + 1;
+    const rankClass = rank <= 3 ? `rank-${rank}` : '';
+    const rankEmoji = rank === 1 ? '🥇' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : rank;
+    return `<tr tabindex="0">
+      <td><span class="lb-rank ${rankClass}">${rankEmoji}</span></td>
+      <td><span class="lb-name">${escHtml(entry.name)}</span></td>
+      <td>
+        <div class="lb-score">${entry.score} / ${entry.total}</div>
+        <div class="lb-pct">${entry.pct}% 정답</div>
+      </td>
+      <td><span class="lb-date">${escHtml(entry.date)}</span></td>
+    </tr>`;
+  }).join('');
+}
+
+let answersVisible = true;
+let explanationsVisible = true;
+
+function renderAnswerSheet() {
+  const container = document.getElementById('answer-sheet-list');
+  if (!container) return;
+  container.innerHTML = '';
+
+  const principleNames = {1:'1원칙: 인식의 용이성', 2:'2원칙: 운용의 용이성', 3:'3원칙: 이해의 용이성', 4:'4원칙: 견고성'};
+  const diffMap = { beginner:['badge-beginner','입문'], mid:['badge-mid','중급'], advanced:['badge-adv','심화'] };
+  let currentPrinciple = null;
+
+  QUESTIONS.forEach((q, i) => {
+    if (q.principle !== currentPrinciple) {
+      currentPrinciple = q.principle;
+      const divider = document.createElement('div');
+      divider.className = 'as-principle-divider';
+      divider.innerHTML = `<div class="as-principle-divider-line"></div><span class="as-principle-divider-label">${principleNames[q.principle]}</span><div class="as-principle-divider-line"></div>`;
+      container.appendChild(divider);
+    }
+
+    const [dClass, dText] = diffMap[q.difficulty] || ['badge-mid','중급'];
+    const item = document.createElement('div');
+    item.className = 'as-item';
+
+    const optsHtml = q.options.map((opt, oi) => {
+      const isAnswer = oi === q.answer;
+      return `<div class="as-opt ${isAnswer ? 'as-opt-answer as-answer-highlight' : ''}" data-answer-opt>
+        <span class="as-opt-num">${oi+1}.</span>
+        <span>${escHtml(opt)}</span>
+        ${isAnswer ? `<span class="as-answer-badge" data-answer-badge>✅ 정답</span>` : ''}
+      </div>`;
+    }).join('');
+
+    const tipClean = q.explanation.tip.replace(/^💡\s*/,'');
+    item.innerHTML = `
+      <div class="as-item-header">
+        <div class="as-q-num">Q${i+1}</div>
+        <div class="as-q-body">
+          <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:10px;">
+            <span class="badge ${dClass}">${dText}</span>
+            <span style="font-size:0.78rem;color:var(--text-muted);font-weight:600;">${escHtml(q.category)}</span>
+          </div>
+          <p class="as-q-text">${escHtml(q.text)}</p>
+          <div class="as-options">${optsHtml}</div>
+        </div>
+      </div>
+      <div class="as-exp" data-exp-block>
+        <div class="as-exp-block">
+          <div class="as-exp-label">정답 근거</div>
+          <div class="as-exp-text">${escHtml(q.explanation.correct)}</div>
+        </div>
+        <div class="as-tip"><span>💡</span><span>${escHtml(tipClean)}</span></div>
+      </div>`;
+    container.appendChild(item);
+  });
+
+  applyAnswerSheetVisibility();
+}
+
+function applyAnswerSheetVisibility() {
+  document.querySelectorAll('.as-answer-highlight').forEach(el => {
+    el.classList.toggle('as-opt-answer', answersVisible);
+  });
+  document.querySelectorAll('[data-answer-badge]').forEach(el => {
+    el.style.display = answersVisible ? '' : 'none';
+  });
+  document.querySelectorAll('[data-exp-block]').forEach(el => {
+    el.style.display = explanationsVisible ? '' : 'none';
+  });
+  const btnA = document.getElementById('btn-toggle-answers');
+  const btnE = document.getElementById('btn-toggle-exp');
+  if (btnA) { btnA.textContent = answersVisible ? '✅ 정답 숨기기' : '⬜ 정답 보이기'; btnA.classList.toggle('active', answersVisible); }
+  if (btnE) { btnE.textContent = explanationsVisible ? '💡 해설 숨기기' : '💡 해설 보이기'; btnE.classList.toggle('active', explanationsVisible); }
+}
+
+function toggleAllAnswers() { answersVisible = !answersVisible; applyAnswerSheetVisibility(); }
+function toggleAllExplanations() { explanationsVisible = !explanationsVisible; applyAnswerSheetVisibility(); }
+
+function goToLeaderboard() {
+  renderLeaderboard();
+  renderAnswerSheet();
+  previousScreen = document.querySelector('.screen.active')?.id?.replace('screen-', '') || 'login';
+  showScreen('leaderboard');
+}
+
+function goBackFromLeaderboard() {
+  showScreen(previousScreen || 'login');
+}
+
+/* URL hash routing */
+let previousScreen = 'login';
+
+function checkHashRoute() {
+  const hash = window.location.hash;
+  if (hash === '#result' || hash === '#leaderboard') {
+    renderLeaderboard();
+    renderAnswerSheet();
+    showScreen('leaderboard');
+  }
+}
+
+window.addEventListener('hashchange', checkHashRoute);
+
+/* ===========================
+   State
+   =========================== */
+let state = {
+  name: '', currentIdx: 0, answers: {},
+  autoAdvance: false, score: 0, completed: false,
+  startTime: null, endTime: null,
+  settings: { theme: 'light' },
+  reviewMode: false, reviewWrongs: [], reviewIdx: 0, reviewAnswers: {},
+};
+
+let miniQuizState = {
+  active: false, principleCode: null,
+  questions: [], currentIdx: 0, answers: {}
+};
+
+const principleInfo = {
+  1: { title: '1원칙: 인식의 용이성', desc: '모든 사용자가 웹 콘텐츠를 시각적, 청각적으로 명확하게 인식할 수 있도록 보장해야 합니다. 대체 텍스트, 자막, 색상 대비 등이 포함됩니다.' },
+  2: { title: '2원칙: 운용의 용이성', desc: '사용자가 키보드나 마우스 등 다양한 기기로 웹을 원활하게 탐색하고 조작할 수 있어야 합니다. 키보드 접근성과 충분한 시간 제공이 핵심입니다.' },
+  3: { title: '3원칙: 이해의 용이성', desc: '사용자가 콘텐츠와 UI의 작동 방식을 쉽게 이해하고 예측할 수 있어야 합니다. 명확한 레이블, 일관된 내비게이션, 적절한 오류 안내를 다룹니다.' },
+  4: { title: '4원칙: 견고성', desc: '다양한 최신 브라우저와 보조 기술에서 콘텐츠가 오류 없이 안정적으로 호환되도록 표준 마크업 문법을 준수해야 합니다.' }
+};
+
+let DISPLAY_QUESTIONS = [];
+
+function buildDisplayQuestions() {
+  const byP = [1,2,3,4].map(p => QUESTIONS.filter(q => q.principle === p));
+  byP.forEach(g => { for (let i = g.length-1; i > 0; i--) { const j = Math.floor(Math.random()*(i+1)); [g[i],g[j]]=[g[j],g[i]]; } });
+  DISPLAY_QUESTIONS = byP.flat();
+  DISPLAY_QUESTIONS.forEach(q => { q._shuffledIndices = q.options.map((_,i)=>i).sort(()=>Math.random()-0.5); });
+}
+
+/* ===========================
+   Settings
+   =========================== */
+function applySettings() {
+  const { theme } = state.settings;
+  if (theme === 'dark') {
+    document.documentElement.setAttribute('data-theme','dark');
+    document.getElementById('btn-theme').classList.add('active');
+  } else {
+    document.documentElement.setAttribute('data-theme','light');
+    document.getElementById('btn-theme').classList.remove('active');
+  }
+  const btnAuto = document.getElementById('btn-auto');
+  if (btnAuto) {
+    btnAuto.innerHTML = `<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="8" cy="8" r="6"/><path d="M8 5v3l2 2"/></svg> 자동넘김 ${state.autoAdvance?'ON':'OFF'}`;
+    btnAuto.classList.toggle('active', state.autoAdvance);
+  }
+}
+
+function toggleTheme() {
+  state.settings.theme = state.settings.theme === 'dark' ? 'light' : 'dark';
+  applySettings();
+  announce('테마 변경: ' + state.settings.theme);
+}
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  const next = document.getElementById('screen-' + id);
+  if (!next) return;
+  next.classList.add('active');
+  next.scrollTop = 0;
+  const homeBtn = document.getElementById('btn-home');
+  if (homeBtn) homeBtn.style.display = (id === 'login' || id === 'leaderboard') ? 'none' : '';
+}
+
+function announce(msg) {
+  const r = document.getElementById('live-region');
+  r.textContent = ''; setTimeout(() => { r.textContent = msg; }, 50);
+}
+
+let toastTimer = null;
+function showToast(msg) {
+  const container = document.getElementById('toast-container');
+  container.innerHTML = '';
+  if (toastTimer) { clearTimeout(toastTimer); toastTimer = null; }
+  const toast = document.createElement('div');
+  toast.className = 'toast';
+  toast.textContent = msg;
+  container.appendChild(toast);
+  requestAnimationFrame(() => requestAnimationFrame(() => toast.classList.add('toast-show')));
+  toastTimer = setTimeout(() => {
+    toast.classList.remove('toast-show');
+    setTimeout(() => { container.innerHTML = ''; }, 250);
+    toastTimer = null;
+  }, 2500);
+}
+
+function init() { applySettings(); checkHashRoute(); }
+
+function startQuiz() {
+  const nameInput = document.getElementById('username-input').value.trim();
+  if (!nameInput) { showToast('⚠️ 이름을 입력해 주세요.'); document.getElementById('username-input').focus(); return; }
+  state.name = nameInput; state.currentIdx = 0; state.answers = {};
+  state.score = 0; state.completed = false;
+  state.startTime = new Date().toISOString(); state.endTime = null;
+  state.reviewMode = false; state.reviewWrongs = []; state.reviewIdx = 0; state.reviewAnswers = {};
+  buildDisplayQuestions();
+  renderQuestion();
+  showScreen('quiz');
+}
+
+function restartQuiz() { goHomeClean(); }
+
+function goHome() {
+  const active = document.querySelector('.screen.active')?.id;
+  if (active === 'screen-login') return;
+  document.getElementById('home-modal').classList.add('open');
+}
+function closeHomeModal() { document.getElementById('home-modal').classList.remove('open'); }
+function confirmGoHome() { document.getElementById('home-modal').classList.remove('open'); goHomeClean(); }
+function goHomeClean() {
+  const savedSettings = Object.assign({}, state.settings);
+  Object.assign(state, { name:'', currentIdx:0, answers:{}, autoAdvance:false, score:0, completed:false, startTime:null, endTime:null, reviewMode:false, reviewWrongs:[], reviewIdx:0, reviewAnswers:{}, settings:savedSettings });
+  DISPLAY_QUESTIONS = [];
+  document.getElementById('username-input').value = '';
+  showScreen('login');
+  document.getElementById('username-input').focus();
+}
+
+let countdownTimer = null;
+
+function renderQuestion() {
+  if (countdownTimer) { clearInterval(countdownTimer); countdownTimer = null; }
+  const q = DISPLAY_QUESTIONS[state.currentIdx];
+  const answered = q.id in state.answers;
+  const total = DISPLAY_QUESTIONS.length;
+  const idx = state.currentIdx;
+
+  document.getElementById('progress-text').textContent = (idx+1) + ' / ' + total + ' 문항';
+  document.getElementById('score-text').textContent = state.score + '점';
+  const fillPct = ((idx+1) / total * 100).toFixed(1);
+  document.getElementById('progress-fill').style.width = fillPct + '%';
+  const pbWrap = document.getElementById('progress-bar-wrap');
+  pbWrap.setAttribute('aria-valuenow', idx+1);
+  pbWrap.setAttribute('aria-valuemax', total);
+
+  const badgeEl = document.getElementById('q-badge');
+  const badgeMap = { beginner:['badge-beginner','입문'], mid:['badge-mid','중급'], advanced:['badge-adv','심화'] };
+  const [bClass, bText] = badgeMap[q.difficulty] || ['badge-mid','중급'];
+  badgeEl.className = 'badge ' + bClass;
+  badgeEl.textContent = bText;
+  document.getElementById('q-category').textContent = q.category;
+  document.getElementById('q-number').textContent = (idx+1) + ' / ' + total;
+  document.getElementById('q-text').textContent = q.text;
+
+  const container = document.getElementById('options-container');
+  container.innerHTML = '';
+  const indices = q._shuffledIndices || q.options.map((_,i)=>i);
+
+  indices.forEach((origIdx, displayPos) => {
+    const label = document.createElement('label');
+    label.className = 'opt-label';
+    label.htmlFor = 'opt-' + idx + '-' + displayPos;
+
+    const radio = document.createElement('input');
+    radio.type = 'radio'; radio.name = 'option';
+    radio.id = 'opt-' + idx + '-' + displayPos; radio.value = origIdx;
+    radio.className = 'opt-radio';
+
+    if (answered) {
+      radio.disabled = true;
+      if (origIdx === q.answer) {
+        label.classList.add('opt-correct');
+        label.insertAdjacentHTML('beforeend', '<span class="opt-icon" aria-hidden="true">✅</span>');
+      } else if (origIdx === state.answers[q.id] && origIdx !== q.answer) {
+        label.classList.add('opt-wrong');
+        label.insertAdjacentHTML('beforeend', '<span class="opt-icon" aria-hidden="true">❌</span>');
+      }
+    } else {
+      radio.onclick = (e) => {
+        checkAnswerImmediate(parseInt(radio.value, 10));
+      };
+      radio.onkeydown = (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          radio.checked = true;
+          checkAnswerImmediate(parseInt(radio.value, 10));
+        } else if (['ArrowDown', 'ArrowRight', 'ArrowUp', 'ArrowLeft'].includes(e.key)) {
+          // 브라우저 기본 동작인 "방향키 이동 시 자동 선택"을 방지합니다.
+          e.preventDefault();
+          const radios = Array.from(container.querySelectorAll('.opt-radio:not(:disabled)'));
+          const currentIdx = radios.indexOf(radio);
+          if (currentIdx === -1) return;
+          let nextIdx = (e.key === 'ArrowDown' || e.key === 'ArrowRight') ? currentIdx + 1 : currentIdx - 1;
+          if (nextIdx >= radios.length) nextIdx = 0;
+          if (nextIdx < 0) nextIdx = radios.length - 1;
+          // 단순히 포커스만 이동시키고 선택 상태를 바꾸지 않습니다.
+          radios[nextIdx].focus();
+        }
+      };
+    }
+
+    const numEl = document.createElement('span'); numEl.className = 'opt-num'; numEl.textContent = (displayPos+1) + '.';
+    const textEl = document.createElement('span'); textEl.className = 'opt-text'; textEl.textContent = q.options[origIdx];
+    label.appendChild(radio); label.appendChild(numEl); label.appendChild(textEl);
+    container.appendChild(label);
+  });
+
+  const feedbackArea = document.getElementById('feedback-area');
+  feedbackArea.innerHTML = '';
+  if (answered) renderFeedback(feedbackArea, q, state.answers[q.id], indices);
+
+  document.getElementById('auto-advance-area').innerHTML = '';
+  document.getElementById('btn-prev').disabled = idx === 0;
+
+  const nextBtn = document.getElementById('btn-next');
+  nextBtn.disabled = !answered;
+  const isLast = idx === total - 1;
+  if (isLast && answered && !state.autoAdvance) {
+    nextBtn.textContent = '결과 확인하기 →';
+    nextBtn.onclick = () => checkCompletion();
+  } else {
+    nextBtn.textContent = isLast ? '완료 →' : '다음 →';
+    nextBtn.onclick = () => skipCountdownAndNext();
+  }
+}
+
+function renderFeedback(container, q, selectedIdx, shuffledIndices) {
+  const isCorrect = selectedIdx === q.answer;
+  const displayOrder = shuffledIndices || q.options.map((_,i)=>i);
+  const answerDisplayPos = displayOrder.indexOf(q.answer) + 1;
+
+  const wrap = document.createElement('div');
+  wrap.className = 'feedback-wrap';
+
+  const banner = document.createElement('div');
+  banner.className = 'feedback-banner ' + (isCorrect ? 'correct' : 'wrong');
+  banner.textContent = isCorrect ? '✅ 정답입니다!' : `❌ 오답입니다. 정답은 ${answerDisplayPos}번입니다.`;
+  wrap.appendChild(banner);
+
+  const body = document.createElement('div');
+  body.className = 'feedback-body';
+
+  // Correct explanation
+  const sec1 = document.createElement('div');
+  sec1.innerHTML = `<div class="fb-section-label">정답 근거</div><div class="fb-text">${escHtml(q.explanation.correct)}</div>`;
+  body.appendChild(sec1);
+
+  // Wrong explanations
+  const sec2 = document.createElement('div');
+  let wrongHtml = '<div class="fb-section-label">오답 해설</div>';
+  displayOrder.forEach((origIdx, displayPos) => {
+    const wText = q.explanation.wrongs[origIdx] || '';
+    wrongHtml += `<div class="fb-wrong-item">${(displayPos+1)}. ${escHtml(wText)}</div>`;
+  });
+  sec2.innerHTML = wrongHtml;
+  body.appendChild(sec2);
+
+  // Tip
+  const tipText = q.explanation.tip.replace(/^💡\s*/,'');
+  const sec3 = document.createElement('div');
+  sec3.innerHTML = `<div class="fb-tip"><span class="fb-tip-icon">💡</span><span>${escHtml(tipText)}</span></div>`;
+  body.appendChild(sec3);
+
+  wrap.appendChild(body);
+  container.appendChild(wrap);
+}
+
+function escHtml(str) {
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function checkAnswerImmediate(selectedIdx) {
+  const q = DISPLAY_QUESTIONS[state.currentIdx];
+  if (q.id in state.answers) return;
+  state.answers[q.id] = selectedIdx;
+  if (selectedIdx === q.answer) state.score++;
+
+  const container = document.getElementById('options-container');
+  container.querySelectorAll('input[type="radio"]').forEach(r => { r.disabled = true; });
+  container.querySelectorAll('.opt-label').forEach(label => {
+    const origIdx = parseInt(label.querySelector('input').value, 10);
+    label.style.cursor = 'default';
+    if (origIdx === q.answer) { label.classList.add('opt-correct'); if (!label.querySelector('.opt-icon')) label.insertAdjacentHTML('beforeend', '<span class="opt-icon">✅</span>'); }
+    else if (origIdx === selectedIdx && origIdx !== q.answer) { label.classList.add('opt-wrong'); if (!label.querySelector('.opt-icon')) label.insertAdjacentHTML('beforeend', '<span class="opt-icon">❌</span>'); }
+  });
+
+  const feedbackArea = document.getElementById('feedback-area');
+  feedbackArea.innerHTML = '';
+  renderFeedback(feedbackArea, q, selectedIdx, q._shuffledIndices);
+
+  const nextBtn = document.getElementById('btn-next');
+  const isLast = state.currentIdx === DISPLAY_QUESTIONS.length - 1;
+  nextBtn.disabled = false;
+
+  if (isLast) {
+    if (state.autoAdvance) { nextBtn.textContent = '완료 →'; nextBtn.onclick = () => skipCountdownAndNext(); startLastCountdown(); }
+    else { nextBtn.textContent = '결과 확인하기 →'; nextBtn.onclick = () => checkCompletion(); }
+  } else {
+    nextBtn.textContent = '다음 →'; nextBtn.onclick = () => skipCountdownAndNext();
+    if (state.autoAdvance) startCountdown();
+  }
+}
+
+function startCountdown() {
+  if (countdownTimer) { clearInterval(countdownTimer); countdownTimer = null; }
+  let rem = 4;
+  const area = document.getElementById('auto-advance-area');
+  area.innerHTML = `<div class="countdown-bar" role="status"><div class="countdown-ring" id="cd-num">${rem}</div><span>${rem}초 후 자동으로 이동합니다.</span></div>`;
+  countdownTimer = setInterval(() => {
+    rem--;
+    const el = document.getElementById('cd-num');
+    if (el) el.textContent = rem;
+    if (rem <= 0) { clearInterval(countdownTimer); countdownTimer = null; navigateNext(); }
+  }, 1000);
+}
+
+function startLastCountdown() {
+  if (countdownTimer) { clearInterval(countdownTimer); countdownTimer = null; }
+  let rem = 4;
+  const area = document.getElementById('auto-advance-area');
+  area.innerHTML = `<div class="countdown-bar" role="status"><div class="countdown-ring" id="cd-num">${rem}</div><span>${rem}초 후 결과로 이동합니다.</span></div>`;
+  countdownTimer = setInterval(() => {
+    rem--;
+    const el = document.getElementById('cd-num');
+    if (el) el.textContent = rem;
+    if (rem <= 0) { clearInterval(countdownTimer); countdownTimer = null; checkCompletion(); }
+  }, 1000);
+}
+
+function skipCountdownAndNext() {
+  if (countdownTimer) { clearInterval(countdownTimer); countdownTimer = null; }
+  const isLast = state.currentIdx === DISPLAY_QUESTIONS.length - 1;
+  if (isLast) { checkCompletion(); } else { navigateNext(); }
+}
+
+function navigateNext() {
+  const newIdx = state.currentIdx + 1;
+  if (newIdx >= DISPLAY_QUESTIONS.length) { checkCompletion(); return; }
+  state.currentIdx = newIdx; renderQuestion();
+}
+
+function toggleAutoAdvance() {
+  state.autoAdvance = !state.autoAdvance;
+  applySettings();
+  if (!state.autoAdvance && countdownTimer) {
+    clearInterval(countdownTimer); countdownTimer = null;
+    ['auto-advance-area','review-auto-area','mini-auto-area'].forEach(id => { const el = document.getElementById(id); if (el) el.innerHTML = ''; });
+  }
+}
+
+function navigate(dir) {
+  if (countdownTimer) { clearInterval(countdownTimer); countdownTimer = null; }
+  const newIdx = state.currentIdx + dir;
+  if (newIdx < 0) return;
+  if (newIdx >= DISPLAY_QUESTIONS.length) { checkCompletion(); return; }
+  state.currentIdx = newIdx; renderQuestion();
+}
+
+function checkCompletion() {
+  const allAnswered = DISPLAY_QUESTIONS.every(q => q.id in state.answers);
+  const unanswered = DISPLAY_QUESTIONS.filter(q => !(q.id in state.answers)).length;
+  if (!allAnswered) { showToast(`⚠️ ${unanswered}개 문항이 미답변 상태입니다.`); return; }
+  state.completed = true; state.endTime = new Date().toISOString();
+  // Save to leaderboard
+  addLeaderboardEntry(state.name, state.score, DISPLAY_QUESTIONS.length, state.startTime, state.endTime);
+  showResult();
+}
+
+/* ===========================
+   Result Screen
+   =========================== */
+function showResult() { showScreen('result'); renderResultScreen(); }
+
+function renderResultScreen() {
+  const total = DISPLAY_QUESTIONS.length;
+  const pct = Math.round(state.score / total * 100);
+
+  let emoji, title, desc;
+  if (pct >= 95) { emoji='🏆'; title=`${state.name}님, 전문가 수준입니다!`; desc='웹 접근성 4원칙을 완벽히 이해하고 있습니다.'; }
+  else if (pct >= 80) { emoji='🌟'; title=`${state.name}님, 핵심 개념을 정 잘 이해하고 있습니다.`; desc='심화 개념을 조금 더 보완하면 완벽합니다.'; }
+  else if (pct >= 60) { emoji='📚'; title=`${state.name}님, 기본기는 갖춰졌습니다.`; desc='오답 노트로 취약 부분을 집중 복습하세요.'; }
+  else { emoji='💪'; title=`${state.name}님, 학습 자료를 다시 정독 후 재도전을 권장합니다.`; desc='파이팅!'; }
+
+  document.getElementById('result-emoji').textContent = emoji;
+  document.getElementById('result-title-el').textContent = title;
+  document.getElementById('result-score').textContent = state.score + ' / ' + total;
+  document.getElementById('result-comment').textContent = desc;
+
+  const start = state.startTime ? new Date(state.startTime) : null;
+  const end = state.endTime ? new Date(state.endTime) : new Date();
+  let metaHtml = '';
+  if (start) {
+    metaHtml += `<div class="result-meta">응시 일시: ${start.toLocaleString('ko-KR')}</div>`;
+    const sec = Math.floor((end - start) / 1000);
+    metaHtml += `<div class="result-meta">소요 시간: ${Math.floor(sec/60)}분 ${sec%60}초</div>`;
+  }
+  document.getElementById('result-meta-area').innerHTML = metaHtml;
+
+  const principleNames = ['1원칙 인식의 용이성','2원칙 운용의 용이성','3원칙 이해의 용이성','4원칙 견고성'];
+  let statsHtml = '';
+  [1,2,3,4].forEach((p, pi) => {
+    const pQs = DISPLAY_QUESTIONS.filter(q => q.principle === p);
+    const correct = pQs.filter(q => state.answers[q.id] === q.answer).length;
+    const wrongCount = pQs.length - correct;
+    const pPct = pQs.length > 0 ? Math.round(correct/pQs.length*100) : 0;
+    const hasWrongs = wrongCount > 0;
+    statsHtml += `<button class="stat-card" onclick="${hasWrongs ? `startPrincipleReview(${p})` : ''}" 
+      aria-label="${principleNames[pi]} ${hasWrongs ? `오답 ${wrongCount}개 다시 풀기` : '오답 없음'}"
+      style="${!hasWrongs ? 'cursor:default;opacity:0.6;' : ''}">
+      <div class="stat-label">${principleNames[pi]}</div>
+      <div class="stat-value">${correct}/${pQs.length}</div>
+      <div class="stat-pct">${pPct}% 정답</div>
+      <span class="stat-arrow" aria-hidden="true">${hasWrongs ? '›' : '✓'}</span>
+    </button>`;
+  });
+  document.getElementById('stats-grid').innerHTML = statsHtml;
+
+  const reviewListWrap = document.getElementById('review-list');
+  reviewListWrap.innerHTML = '<h2 class="review-list-title">📋 전체 풀이 내역</h2>';
+  DISPLAY_QUESTIONS.forEach((q, i) => {
+    const myAns = state.answers[q.id];
+    const isCorrect = myAns === q.answer;
+    const item = document.createElement('div');
+    item.className = 'review-item ' + (isCorrect ? 'review-ok' : 'review-fail');
+    const diffMap = { beginner:['badge-beginner','입문'], mid:['badge-mid','중급'], advanced:['badge-adv','심화'] };
+    const [dClass, dText] = diffMap[q.difficulty] || ['badge-mid','중급'];
+    const tipClean = q.explanation.tip.replace(/^💡\s*/,'');
+    item.innerHTML = `
+      <div class="review-item-meta">
+        <span class="badge ${dClass}">${dText}</span>
+        <strong style="font-size:0.85rem;">${i+1}번</strong>
+        <span style="font-size:0.8rem;color:var(--text-muted);">${escHtml(q.category)}</span>
+        <span style="margin-left:auto;">${isCorrect ? '✅' : '❌'}</span>
+      </div>
+      <p class="review-q-text">${escHtml(q.text)}</p>
+      <div class="review-my-ans">내 답변: ${myAns !== undefined ? escHtml(q.options[myAns]) : '미답변'}</div>
+      ${!isCorrect ? `<div class="review-correct-ans">✅ 정답: ${escHtml(q.options[q.answer])}</div>` : ''}
+      <div class="review-feedback-text">${escHtml(q.explanation.correct)}</div>
+      <div class="review-feedback-text" style="margin-top:4px;">💡 ${escHtml(tipClean)}</div>`;
+    reviewListWrap.appendChild(item);
+  });
+
+  const wrongs = DISPLAY_QUESTIONS.filter(q => state.answers[q.id] !== q.answer);
+  document.getElementById('btn-review').style.display = wrongs.length > 0 ? '' : 'none';
+}
+
+/* ===========================
+   Mini Quiz
+   =========================== */
+function startPrincipleReview(principleCode) {
+  const wrongs = DISPLAY_QUESTIONS.filter(q =>
+    q.principle === principleCode && state.answers[q.id] !== q.answer
+  );
+  if (wrongs.length === 0) { showToast('해당 원칙에서 틀린 문제가 없습니다! 🎉'); return; }
+
+  const shuffled = [...wrongs].sort(() => Math.random() - 0.5);
+  shuffled.forEach(q => { q._miniShuffledIndices = q.options.map((_,i)=>i).sort(()=>Math.random()-0.5); });
+
+  miniQuizState = { active:true, principleCode, questions:shuffled, currentIdx:0, answers:{} };
+  document.getElementById('mini-quiz-title').textContent = principleInfo[principleCode].title;
+  document.getElementById('mini-quiz-desc').textContent =
+    `오답 ${wrongs.length}문항을 다시 풀어보세요. ${principleInfo[principleCode].desc}`;
+  renderMiniQuizQuestion();
+  showScreen('mini-quiz');
+}
+
+function startMiniQuiz(principleCode) {
+  const pQs = QUESTIONS.filter(q => q.principle === principleCode);
+  const shuffled = [...pQs].sort(()=>Math.random()-0.5).slice(0,3);
+  miniQuizState = { active:true, principleCode, questions:shuffled, currentIdx:0, answers:{} };
+  document.getElementById('mini-quiz-title').textContent = principleInfo[principleCode].title;
+  document.getElementById('mini-quiz-desc').textContent = principleInfo[principleCode].desc;
+  renderMiniQuizQuestion();
+  showScreen('mini-quiz');
+}
+
+function renderMiniQuizQuestion() {
+  if (countdownTimer) { clearInterval(countdownTimer); countdownTimer = null; }
+  const q = miniQuizState.questions[miniQuizState.currentIdx];
+  const answered = q.id in miniQuizState.answers;
+  const total = miniQuizState.questions.length;
+  const idx = miniQuizState.currentIdx;
+
+  document.getElementById('mini-progress-text').textContent = `${idx+1} / ${total}`;
+  document.getElementById('mini-progress-fill').style.width = ((idx+1)/total*100) + '%';
+
+  const badgeMap = { beginner:['badge-beginner','입문'], mid:['badge-mid','중급'], advanced:['badge-adv','심화'] };
+  const [bClass, bText] = badgeMap[q.difficulty] || ['badge-mid','중급'];
+  document.getElementById('mq-badge').className = 'badge ' + bClass;
+  document.getElementById('mq-badge').textContent = bText;
+  document.getElementById('mq-category').textContent = q.category;
+  document.getElementById('mq-text').textContent = q.text;
+
+  const container = document.getElementById('mini-options-container');
+  container.innerHTML = '';
+  if (!q._miniShuffledIndices) q._miniShuffledIndices = q.options.map((_,i)=>i).sort(()=>Math.random()-0.5);
+  const indices = q._miniShuffledIndices;
+
+  indices.forEach((origIdx, di) => {
+    const label = document.createElement('label');
+    label.className = 'opt-label'; label.htmlFor = 'mopt-' + idx + '-' + di;
+    const radio = document.createElement('input');
+    radio.type = 'radio'; radio.name = 'mini-option'; radio.id = 'mopt-' + idx + '-' + di; radio.value = origIdx; radio.className = 'opt-radio';
+    
+    if (answered) {
+      radio.disabled = true;
+      if (origIdx === q.answer) { label.classList.add('opt-correct'); label.insertAdjacentHTML('beforeend','<span class="opt-icon">✅</span>'); }
+      else if (origIdx === miniQuizState.answers[q.id] && origIdx !== q.answer) { label.classList.add('opt-wrong'); label.insertAdjacentHTML('beforeend','<span class="opt-icon">❌</span>'); }
+    } else { 
+      radio.onclick = () => checkMiniAnswerImmediate(parseInt(radio.value,10)); 
+      radio.onkeydown = (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          radio.checked = true;
+          checkMiniAnswerImmediate(parseInt(radio.value, 10));
+        } else if (['ArrowDown', 'ArrowRight', 'ArrowUp', 'ArrowLeft'].includes(e.key)) {
+          e.preventDefault();
+          const radios = Array.from(container.querySelectorAll('.opt-radio:not(:disabled)'));
+          const currentIdx = radios.indexOf(radio);
+          if (currentIdx === -1) return;
+          let nextIdx = (e.key === 'ArrowDown' || e.key === 'ArrowRight') ? currentIdx + 1 : currentIdx - 1;
+          if (nextIdx >= radios.length) nextIdx = 0;
+          if (nextIdx < 0) nextIdx = radios.length - 1;
+          radios[nextIdx].focus();
+        }
+      };
+    }
+    const numEl = document.createElement('span'); numEl.className = 'opt-num'; numEl.textContent = (di+1)+'.';
+    const textEl = document.createElement('span'); textEl.className = 'opt-text'; textEl.textContent = q.options[origIdx];
+    label.appendChild(radio); label.appendChild(numEl); label.appendChild(textEl);
+    container.appendChild(label);
+  });
+
+  const feedbackArea = document.getElementById('mini-feedback-area');
+  feedbackArea.innerHTML = '';
+  document.getElementById('mini-auto-area').innerHTML = '';
+
+  const prevBtn = document.getElementById('btn-mini-prev');
+  const nextBtn = document.getElementById('btn-mini-next');
+  prevBtn.disabled = idx === 0;
+  nextBtn.disabled = !answered;
+
+  if (answered) {
+    renderFeedback(feedbackArea, q, miniQuizState.answers[q.id], indices);
+    const isLast = idx === total - 1;
+    if (isLast) { prevBtn.style.display='none'; nextBtn.textContent='결과로 이동 →'; nextBtn.onclick=()=>showResult(); }
+    else { prevBtn.style.display=''; nextBtn.textContent='다음 →'; nextBtn.onclick=()=>skipMiniCountdownAndNext(); }
+  } else {
+    prevBtn.style.display=''; nextBtn.textContent='다음 →'; nextBtn.onclick=()=>skipMiniCountdownAndNext();
+  }
+}
+
+function checkMiniAnswerImmediate(selectedIdx) {
+  const q = miniQuizState.questions[miniQuizState.currentIdx];
+  if (q.id in miniQuizState.answers) return;
+  miniQuizState.answers[q.id] = selectedIdx;
+  renderMiniQuizQuestion();
+  if (state.autoAdvance) {
+    const isLast = miniQuizState.currentIdx === miniQuizState.questions.length-1;
+    if (isLast) startLastMiniCountdown(); else startMiniCountdown();
+  }
+}
+
+function startMiniCountdown() {
+  if (countdownTimer) { clearInterval(countdownTimer); countdownTimer = null; }
+  let rem = 4; const area = document.getElementById('mini-auto-area');
+  area.innerHTML = `<div class="countdown-bar" role="status"><div class="countdown-ring" id="cd-mini">${rem}</div><span>${rem}초 후 다음으로 이동합니다.</span></div>`;
+  countdownTimer = setInterval(() => { rem--; const el=document.getElementById('cd-mini'); if(el) el.textContent=rem; if(rem<=0){clearInterval(countdownTimer);countdownTimer=null;miniNavigateDir(1);} }, 1000);
+}
+
+function startLastMiniCountdown() {
+  if (countdownTimer) { clearInterval(countdownTimer); countdownTimer = null; }
+  let rem = 4; const area = document.getElementById('mini-auto-area');
+  area.innerHTML = `<div class="countdown-bar" role="status"><div class="countdown-ring" id="cd-mini">${rem}</div><span>${rem}초 후 결과로 돌아갑니다.</span></div>`;
+  countdownTimer = setInterval(() => { rem--; const el=document.getElementById('cd-mini'); if(el) el.textContent=rem; if(rem<=0){clearInterval(countdownTimer);countdownTimer=null;showResult();} }, 1000);
+}
+
+function skipMiniCountdownAndNext() {
+  if (countdownTimer) { clearInterval(countdownTimer); countdownTimer = null; }
+  const isLast = miniQuizState.currentIdx === miniQuizState.questions.length-1;
+  if (isLast) { showResult(); } else { miniNavigateDir(1); }
+}
+
+function miniNavigateDir(dir) {
+  if (countdownTimer) { clearInterval(countdownTimer); countdownTimer = null; }
+  const newIdx = miniQuizState.currentIdx + dir;
+  if (newIdx < 0 || newIdx >= miniQuizState.questions.length) return;
+  miniQuizState.currentIdx = newIdx; renderMiniQuizQuestion();
+}
+
+/* ===========================
+   Review Mode
+   =========================== */
+function startReviewMode() {
+  const wrongs = DISPLAY_QUESTIONS.filter(q => state.answers[q.id] !== q.answer);
+  if (wrongs.length === 0) { showToast('틀린 문항이 없습니다. 🎉'); return; }
+  state.reviewWrongs = [...wrongs].sort(()=>Math.random()-0.5);
+  state.reviewWrongs.forEach(q => { q._reviewShuffledIndices = q.options.map((_,i)=>i).sort(()=>Math.random()-0.5); });
+  state.reviewIdx = 0; state.reviewAnswers = {};
+  renderReviewQuestion(); showScreen('review');
+}
+
+function reviewNavigateDir(dir) {
+  if (countdownTimer) { clearInterval(countdownTimer); countdownTimer = null; }
+  const newIdx = state.reviewIdx + dir;
+  if (newIdx < 0) return;
+  if (newIdx >= state.reviewWrongs.length) { showResult(); return; }
+  state.reviewIdx = newIdx; renderReviewQuestion();
+}
+
+function renderReviewQuestion() {
+  if (countdownTimer) { clearInterval(countdownTimer); countdownTimer = null; }
+  const wrongs = state.reviewWrongs; const idx = state.reviewIdx;
+  if (idx >= wrongs.length) { showResult(); return; }
+  const q = wrongs[idx];
+
+  document.getElementById('review-progress-text').textContent = (idx+1) + ' / ' + wrongs.length;
+  document.getElementById('review-progress-fill').style.width = ((idx+1)/wrongs.length*100) + '%';
+
+  const badgeMap = { beginner:['badge-beginner','입문'], mid:['badge-mid','중급'], advanced:['badge-adv','심화'] };
+  const [bClass,bText] = badgeMap[q.difficulty] || ['badge-mid','중급'];
+  document.getElementById('rq-badge').className = 'badge ' + bClass;
+  document.getElementById('rq-badge').textContent = bText;
+  document.getElementById('rq-category').textContent = q.category;
+  document.getElementById('rq-number').textContent = '복습 ' + (idx+1) + ' / ' + wrongs.length;
+  document.getElementById('rq-text').textContent = q.text;
+
+  const answered = q.id in state.reviewAnswers;
+  const container = document.getElementById('review-options-container'); container.innerHTML = '';
+  const indices = q._reviewShuffledIndices || q.options.map((_,i)=>i);
+
+  indices.forEach((origIdx, di) => {
+    const label = document.createElement('label');
+    label.className = 'opt-label'; label.htmlFor = 'ropt-' + idx + '-' + di;
+    const radio = document.createElement('input');
+    radio.type = 'radio'; radio.name = 'review-option'; radio.id = 'ropt-' + idx + '-' + di; radio.value = origIdx; radio.className = 'opt-radio';
+    
+    if (answered) {
+      radio.disabled = true;
+      if (origIdx === q.answer) { label.classList.add('opt-correct'); label.insertAdjacentHTML('beforeend','<span class="opt-icon">✅</span>'); }
+      else if (origIdx === state.reviewAnswers[q.id] && origIdx !== q.answer) { label.classList.add('opt-wrong'); label.insertAdjacentHTML('beforeend','<span class="opt-icon">❌</span>'); }
+    } else { 
+      radio.onclick = () => checkReviewAnswerImmediate(parseInt(radio.value,10));
+      radio.onkeydown = (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          radio.checked = true;
+          checkReviewAnswerImmediate(parseInt(radio.value, 10));
+        } else if (['ArrowDown', 'ArrowRight', 'ArrowUp', 'ArrowLeft'].includes(e.key)) {
+          e.preventDefault();
+          const radios = Array.from(container.querySelectorAll('.opt-radio:not(:disabled)'));
+          const currentIdx = radios.indexOf(radio);
+          if (currentIdx === -1) return;
+          let nextIdx = (e.key === 'ArrowDown' || e.key === 'ArrowRight') ? currentIdx + 1 : currentIdx - 1;
+          if (nextIdx >= radios.length) nextIdx = 0;
+          if (nextIdx < 0) nextIdx = radios.length - 1;
+          radios[nextIdx].focus();
+        }
+      };
+    }
+    const numEl = document.createElement('span'); numEl.className = 'opt-num'; numEl.textContent = (di+1)+'.';
+    const textEl = document.createElement('span'); textEl.className = 'opt-text'; textEl.textContent = q.options[origIdx];
+    label.appendChild(radio); label.appendChild(numEl); label.appendChild(textEl);
+    container.appendChild(label);
+  });
+
+  const feedbackArea = document.getElementById('review-feedback-area'); feedbackArea.innerHTML = '';
+  document.getElementById('review-auto-area').innerHTML = '';
+
+  const prevBtn = document.getElementById('btn-review-prev');
+  const nextBtn = document.getElementById('btn-review-next');
+  prevBtn.disabled = idx === 0; nextBtn.disabled = !answered;
+
+  if (answered) {
+    renderFeedback(feedbackArea, q, state.reviewAnswers[q.id], indices);
+    const isLast = idx === wrongs.length-1;
+    if (isLast) { prevBtn.style.display='none'; nextBtn.textContent='완료 →'; nextBtn.onclick=()=>showResult(); }
+    else { prevBtn.style.display=''; nextBtn.textContent='다음 복습 →'; nextBtn.onclick=()=>skipCountdownAndNextReview(); }
+  } else {
+    prevBtn.style.display=''; nextBtn.textContent='다음 복습 →'; nextBtn.onclick=()=>skipCountdownAndNextReview();
+  }
+}
+
+function checkReviewAnswerImmediate(selectedIdx) {
+  const q = state.reviewWrongs[state.reviewIdx];
+  if (q.id in state.reviewAnswers) return;
+  state.reviewAnswers[q.id] = selectedIdx;
+  renderReviewQuestion();
+  if (state.autoAdvance) {
+    const isLast = state.reviewIdx === state.reviewWrongs.length-1;
+    if (isLast) startLastReviewCountdown(); else startReviewCountdown();
+  }
+}
+
+function startReviewCountdown() {
+  if (countdownTimer) { clearInterval(countdownTimer); countdownTimer = null; }
+  let rem = 4; const area = document.getElementById('review-auto-area');
+  area.innerHTML = `<div class="countdown-bar" role="status"><div class="countdown-ring" id="cd-rev">${rem}</div><span>${rem}초 후 다음 복습으로 이동합니다.</span></div>`;
+  countdownTimer = setInterval(() => { rem--; const el=document.getElementById('cd-rev'); if(el) el.textContent=rem; if(rem<=0){clearInterval(countdownTimer);countdownTimer=null;reviewNavigateDir(1);} }, 1000);
+}
+
+function startLastReviewCountdown() {
+  if (countdownTimer) { clearInterval(countdownTimer); countdownTimer = null; }
+  let rem = 4; const area = document.getElementById('review-auto-area');
+  area.innerHTML = `<div class="countdown-bar" role="status"><div class="countdown-ring" id="cd-rev">${rem}</div><span>${rem}초 후 결과로 이동합니다.</span></div>`;
+  countdownTimer = setInterval(() => { rem--; const el=document.getElementById('cd-rev'); if(el) el.textContent=rem; if(rem<=0){clearInterval(countdownTimer);countdownTimer=null;showResult();} }, 1000);
+}
+
+function skipCountdownAndNextReview() {
+  if (countdownTimer) { clearInterval(countdownTimer); countdownTimer = null; }
+  const isLast = state.reviewIdx === state.reviewWrongs.length-1;
+  if (isLast) { showResult(); } else { reviewNavigateDir(1); }
+}
+
+/* ===========================
+   Keyboard
+   =========================== */
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') { closeHomeModal(); return; }
+
+  const activeScreen = document.querySelector('.screen.active')?.id;
+
+  if ((e.key === ' ' || e.key === 'Enter') && countdownTimer && activeScreen !== 'screen-leaderboard') {
+    const tag = document.activeElement?.tagName;
+    if (tag === 'BUTTON' || tag === 'A' || tag === 'INPUT' || tag === 'LABEL') return;
+    e.preventDefault();
+    if (activeScreen === 'screen-quiz') skipCountdownAndNext();
+    else if (activeScreen === 'screen-review') skipCountdownAndNextReview();
+    else if (activeScreen === 'screen-mini-quiz') skipMiniCountdownAndNext();
+    return;
+  }
+
+  if (activeScreen === 'screen-quiz') {
+    if (e.key === 'ArrowLeft') { e.preventDefault(); navigate(-1); return; }
+    if (e.key === 'ArrowRight') { e.preventDefault(); if (!(DISPLAY_QUESTIONS[state.currentIdx].id in state.answers)) { showToast('⚠️ 문제를 먼저 풀어주세요.'); } else { skipCountdownAndNext(); } return; }
+    if (['1','2','3','4'].includes(e.key)) { const radios = document.querySelectorAll('input[name="option"]'); if (radios[parseInt(e.key)-1] && !radios[parseInt(e.key)-1].disabled) { radios[parseInt(e.key)-1].click(); } }
+  }
+
+  if (activeScreen === 'screen-review') {
+    if (e.key === 'ArrowLeft') { e.preventDefault(); reviewNavigateDir(-1); return; }
+    if (e.key === 'ArrowRight') { e.preventDefault(); if (!(state.reviewWrongs[state.reviewIdx].id in state.reviewAnswers)) { showToast('⚠️ 문제를 먼저 풀어주세요.'); } else { skipCountdownAndNextReview(); } return; }
+    if (['1','2','3','4'].includes(e.key)) { const radios = document.querySelectorAll('input[name="review-option"]'); if (radios[parseInt(e.key)-1] && !radios[parseInt(e.key)-1].disabled) { radios[parseInt(e.key)-1].click(); } }
+  }
+
+  if (activeScreen === 'screen-mini-quiz') {
+    if (e.key === 'ArrowLeft') { e.preventDefault(); miniNavigateDir(-1); return; }
+    if (e.key === 'ArrowRight') { e.preventDefault(); if (!(miniQuizState.questions[miniQuizState.currentIdx].id in miniQuizState.answers)) { showToast('⚠️ 문제를 먼저 풀어주세요.'); } else { skipMiniCountdownAndNext(); } return; }
+    if (['1','2','3','4'].includes(e.key)) { const radios = document.querySelectorAll('input[name="mini-option"]'); if (radios[parseInt(e.key)-1] && !radios[parseInt(e.key)-1].disabled) { radios[parseInt(e.key)-1].click(); } }
+  }
+});
+
+/* Expose globals */
+Object.assign(window, {
+  startQuiz, restartQuiz, showResult, startReviewMode,
+  navigate, reviewNavigateDir, skipCountdownAndNext, skipCountdownAndNextReview,
+  toggleAutoAdvance, toggleTheme, goHome, closeHomeModal, confirmGoHome, showToast,
+  startMiniQuiz, miniNavigateDir, checkMiniAnswerImmediate, startPrincipleReview,
+  goToLeaderboard, goBackFromLeaderboard, clearLeaderboard,
+  toggleAllAnswers, toggleAllExplanations
+});
+
+init();
+
+})();
+</script>
+</body>
+</html>
